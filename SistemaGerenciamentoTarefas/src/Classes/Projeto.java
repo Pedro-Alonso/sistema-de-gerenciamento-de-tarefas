@@ -1,3 +1,4 @@
+package SistemaGerenciamentoTarefas.src.Classes;
 public class Projeto {
     
     protected int contTarefas;
