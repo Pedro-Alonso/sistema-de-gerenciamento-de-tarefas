@@ -1,4 +1,4 @@
-package SistemaGerenciamentoTasks.src.Classes;
+package SistemaGerenciamentoTarefas.src.Classes;
 
 import java.time.LocalDate;
 
