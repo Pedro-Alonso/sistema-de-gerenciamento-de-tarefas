@@ -15,7 +15,6 @@ public class Projeto {
         vetorTarefas = new Tarefa[max];
     }
 
-    //getters e setters
     public String getNomeProjeto ()
     {
         return nomeProjeto;
