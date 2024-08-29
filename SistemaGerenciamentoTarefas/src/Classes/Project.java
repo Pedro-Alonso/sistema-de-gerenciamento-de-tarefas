@@ -1,8 +1,9 @@
 package SistemaGerenciamentoTarefas.src.Classes;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
-public class Projeto {
+public class Project {
     
     protected int taskCount;
     protected LocalDate beginDate;
@@ -12,7 +13,7 @@ public class Projeto {
     protected Task taskArray[];
 
     //constructor method
-    public Projeto(LocalDate beginDate, LocalDate limitDate, String name)
+    public Project(LocalDate beginDate, LocalDate limitDate, String name)
     {
         this.beginDate = beginDate;
         this.limitDate = limitDate;
@@ -23,11 +24,11 @@ public class Projeto {
     }
 
     //method to search tasks of the project
-    public int searchTask (String id)
+    public int searchTask (UUID id)
     {
         for (int i = 0; i < taskCount; i++)
         {
-            if (taskArray[i].getId().equals(id))
+            if (taskArray[i].getTaskId().equals(id))
             {
                 return i;
             }
@@ -46,7 +47,7 @@ public class Projeto {
         }
     }
 
-    public void removeTask (String id)
+    public void removeTask (UUID id)
     {
         int i = searchTask(id);
 
@@ -54,7 +55,8 @@ public class Projeto {
         {
             if (i < taskCount)
             {
-                int j = 0;
+                int j;
+
                 for (j = i; j < taskCount; j++)
                 {
                     taskArray[j] = taskArray[j+1];
