@@ -10,7 +10,6 @@ public class Task {
   protected String description;
   protected LocalDate deadline;
   protected int priority;
-  protected boolean isDone;
   protected Status status;
 
   enum Status {
@@ -53,14 +52,6 @@ public class Task {
 
   public void setPriority(int priority) {
     this.priority = priority;
-  }
-
-  public boolean isDone() {
-    return isDone;
-  }
-
-  public void setDone(boolean isDone) {
-    this.isDone = isDone;
   }
 
   public Status getStatus() {
