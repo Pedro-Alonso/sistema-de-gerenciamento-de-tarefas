@@ -10,6 +10,11 @@ public class Task {
     protected LocalDate deadline;
     protected int priority;
     protected boolean isDone;
+    protected Status status;
+
+    enum Status {
+        TODO, DOING, DONE
+    }
 
     public UUID getTaskId() {
         return taskId;
@@ -43,6 +48,12 @@ public class Task {
     }
     public void setDone(boolean isDone) {
         this.isDone = isDone;
+    }
+    public Status getStatus() {
+        return status;
+    }
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     
