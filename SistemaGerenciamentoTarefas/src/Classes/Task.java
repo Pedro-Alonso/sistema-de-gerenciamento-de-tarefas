@@ -1,6 +1,7 @@
 package SistemaGerenciamentoTarefas.src.Classes;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.UUID;
 
 public class Task {
@@ -11,6 +12,8 @@ public class Task {
   private LocalDate deadline;
   private int priority;
   private Status status;
+  private ArrayList<Tag> tags;
+  private ArrayList<SubTask> subTasks;
 
   enum Status {
     TODO,
@@ -31,6 +34,9 @@ public class Task {
 
     this.taskId = UUID.randomUUID();
     this.status = Status.TODO;
+
+    this.tags = new ArrayList<Tags>();
+    this.subTasks = new ArrayList<SubTask>();
   }
 
   public UUID getTaskId() {
@@ -75,6 +81,22 @@ public class Task {
 
   public void setStatus(Status status) {
     this.status = status;
+  }
+
+  public ArrayList<Tag> getTags() {
+    return tags;
+  }
+
+  public void addTag(Tag tag) {
+    tags.add(tag);
+  }
+
+  public ArrayList<SubTask> getSubTasks() {
+    return subTasks;
+  }
+
+  public void addSubTask(SubTask subTask) {
+    subTasks.add(subTask);
   }
 
   /**
