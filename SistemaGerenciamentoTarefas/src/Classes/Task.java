@@ -35,7 +35,7 @@ public class Task {
     this.taskId = UUID.randomUUID();
     this.status = Status.TODO;
 
-    this.tags = new ArrayList<Tags>();
+    this.tags = new ArrayList<Tag>();
     this.subTasks = new ArrayList<SubTask>();
   }
 
@@ -109,7 +109,7 @@ public class Task {
   }
 
   /**
-   * Method to increment (by one) the priority of the current Task object
+   * Method to decrement (by one) the priority of the current Task object
    * @category Method
    * @return void
    */
