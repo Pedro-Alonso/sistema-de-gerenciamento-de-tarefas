@@ -3,6 +3,7 @@ package SistemaGerenciamentoTarefas.src.Classes;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.function.Function;
 
 public class Task {
 
@@ -87,16 +88,79 @@ public class Task {
     return tags;
   }
 
-  public void addTag(Tag tag) {
-    tags.add(tag);
-  }
-
   public ArrayList<SubTask> getSubTasks() {
     return subTasks;
   }
 
+  private <T> String getListString(ArrayList<T> array, Function<T, String> getNameFunc) {
+    if (array == null || array.isEmpty()) return "N/A";
+
+    StringBuilder returnString = new StringBuilder();
+    array.forEach(t -> {
+        returnString.append(getNameFunc.apply(t)).append(", ");
+    });
+
+    return returnString.substring(0, returnString.length() - 2);
+  }
+
+  /**
+   * Method to add a Tag to the current Task object
+   * @category Method
+   * @return void
+   */
+  public void addTag(Tag tag) {
+    tags.add(tag);
+  }
+
+  /**
+   * Method to add a SubTask to the current Task object
+   * @category Method
+   * @return void
+   */
   public void addSubTask(SubTask subTask) {
     subTasks.add(subTask);
+  }
+
+  /**
+   * Method that returns a String with all the information about the current Task object, except for the taskId
+   * @category Method
+   * @return String
+   */
+  public String printTask() {
+
+    String tagNames = getListString(tags, Tag::getName);
+    String subTaskNames = getListString(subTasks, SubTask::getName);
+
+    String currentStatus = "";
+    switch (status) {
+      case TODO:
+        currentStatus = "Pendente";
+        break;
+      case DOING:
+        currentStatus = "Em andamento";
+      case DONE:
+        currentStatus = "Concluído";
+    }
+
+    String returnData = String.format(
+      """
+      Nome: %s
+      Descrição: %s
+      Prazo: %s
+      Prioridade: %s
+      Status: %s
+      Etiquetas: %s
+      Sub tarefas: %s
+      """,
+      name,
+      description,
+      deadline,
+      priority,
+      currentStatus,
+      tagNames,
+      subTaskNames
+    );
+    return returnData;
   }
 
   /**
