@@ -98,7 +98,49 @@ public class Task {
    * @return void
    */
   public void addTag(Tag tag) {
-    tags.add(tag);
+    Tag t = getTagById(tag.getId());
+    if (t == null) tags.add(tag);
+    return;
+  }
+
+  /**
+   * Method to get the Tag object on this Task tags, if exists
+   * @param id
+   * @return Tag -> Tag if exists, null if not
+   */
+  public Tag getTagById(UUID id) {
+    for (Tag tag : tags) {
+      if (tag.getId() == id) return tag;
+    }
+    return null;
+  }
+
+  /**
+   * Method to get the index of a specific Tag on this Task tags
+   * @param id
+   * @return int -> index if exists, -1 if not
+   */
+  private int getTagIndex(UUID id) {
+    int index = -1;
+    for (int i = 0; i < tags.size(); i++) {
+      if (tags.get(i).getId() == id) {
+        index = i;
+        break;
+      }
+    }
+    return index;
+  }
+
+  /**
+   * Method to remove a Tag from this Task tags of a given ig
+   * @param id
+   * @return boolean -> true if removed, false if not exists
+   */
+  public boolean removeTag(UUID id) {
+    int tagIndex = getTagIndex(id);
+    if (tagIndex == -1) return false;
+    tags.remove(tagIndex);
+    return true;
   }
 
   /**
@@ -107,7 +149,49 @@ public class Task {
    * @return void
    */
   public void addSubTask(SubTask subTask) {
-    subTasks.add(subTask);
+    SubTask st = getSubTaskById(subTask.getTaskId());
+    if (st == null) subTasks.add(subTask);
+    return;
+  }
+
+  /**
+   * Method to get the SubTask object on this Task subTasks, if exists
+   * @param id
+   * @return SubTask -> SubTask if exists, null if not
+   */
+  public SubTask getSubTaskById(UUID id) {
+    for (SubTask subTask : subTasks) {
+      if (subTask.getTaskId() == id) return subTask;
+    }
+    return null;
+  }
+
+  /**
+   * Method to get the index of a specific SubTask on this Task subTasks
+   * @param id
+   * @return int -> index if exists, -1 if not
+   */
+  private int getSubTaskIndex(UUID id) {
+    int index = -1;
+    for (int i = 0; i < subTasks.size(); i++) {
+      if (subTasks.get(i).getTaskId() == id) {
+        index = i;
+        break;
+      }
+    }
+    return index;
+  }
+
+  /**
+   * Method to remove a SubTask from this Task subTasks of a given ig
+   * @param id
+   * @return boolean -> true if removed, false if not exists
+   */
+  public boolean removeSubTask(UUID id) {
+    int subTaskIndex = getSubTaskIndex(id);
+    if (subTaskIndex == -1) return false;
+    subTasks.remove(subTaskIndex);
+    return true;
   }
 
   /**
