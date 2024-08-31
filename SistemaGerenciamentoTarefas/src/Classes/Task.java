@@ -5,12 +5,12 @@ import java.util.UUID;
 
 public class Task {
 
-  protected UUID taskId;
-  protected String name;
-  protected String description;
-  protected LocalDate deadline;
-  protected int priority;
-  protected Status status;
+  private UUID taskId;
+  private String name;
+  private String description;
+  private LocalDate deadline;
+  private int priority;
+  private Status status;
 
   enum Status {
     TODO,
