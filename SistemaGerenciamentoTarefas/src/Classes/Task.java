@@ -18,6 +18,16 @@ public class Task {
     DONE,
   }
 
+  public Task(String name, String description, LocalDate deadline, int priority) {
+    this.name = name;
+    this.description = description;
+    this.deadline = deadline;
+    this.priority = priority;
+
+    this.taskId = UUID.randomUUID();
+    this.status = Status.TODO;
+  }
+
   public UUID getTaskId() {
     return taskId;
   }
