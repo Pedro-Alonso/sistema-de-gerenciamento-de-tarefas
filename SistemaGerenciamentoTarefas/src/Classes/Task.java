@@ -92,17 +92,6 @@ public class Task {
     return subTasks;
   }
 
-  private <T> String getListString(ArrayList<T> array, Function<T, String> getNameFunc) {
-    if (array == null || array.isEmpty()) return "N/A";
-
-    StringBuilder returnString = new StringBuilder();
-    array.forEach(t -> {
-        returnString.append(getNameFunc.apply(t)).append(", ");
-    });
-
-    return returnString.substring(0, returnString.length() - 2);
-  }
-
   /**
    * Method to add a Tag to the current Task object
    * @category Method
@@ -122,12 +111,34 @@ public class Task {
   }
 
   /**
+   * Method to get all elements of a given ArrayList<T> and return a String with their names, using the equivalent getName() method of the T class
+   * @category Method
+   * @param array ArrayList if T class
+   * @param getNameFunc Equivalent function of getName() on T class
+   * @return void
+   *
+   * Example: getListString(tasks, Task::getName);
+   */
+  private <T> String getListString(
+    ArrayList<T> array,
+    Function<T, String> getNameFunc
+  ) {
+    if (array == null || array.isEmpty()) return "N/A";
+
+    StringBuilder returnString = new StringBuilder();
+    array.forEach(t -> {
+      returnString.append(getNameFunc.apply(t)).append(", ");
+    });
+
+    return returnString.substring(0, returnString.length() - 2);
+  }
+
+  /**
    * Method that returns a String with all the information about the current Task object, except for the taskId
    * @category Method
    * @return String
    */
   public String printTask() {
-
     String tagNames = getListString(tags, Tag::getName);
     String subTaskNames = getListString(subTasks, SubTask::getName);
 
