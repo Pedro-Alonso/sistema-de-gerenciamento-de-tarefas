@@ -18,7 +18,12 @@ public class Task {
     DONE,
   }
 
-  public Task(String name, String description, LocalDate deadline, int priority) {
+  public Task(
+    String name,
+    String description,
+    LocalDate deadline,
+    int priority
+  ) {
     this.name = name;
     this.description = description;
     this.deadline = deadline;
@@ -70,5 +75,23 @@ public class Task {
 
   public void setStatus(Status status) {
     this.status = status;
+  }
+
+  /**
+   * Method to increment (by one) the priority of the current Task object
+   * @category Method
+   * @return void
+   */
+  public void incrementPriority() {
+    this.priority += 1;
+  }
+
+  /**
+   * Method to increment (by one) the priority of the current Task object
+   * @category Method
+   * @return void
+   */
+  public void decrementPriority() {
+    this.priority -= 1;
   }
 }
