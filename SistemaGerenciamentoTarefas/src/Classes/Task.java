@@ -237,7 +237,7 @@ public class Task {
         currentStatus = "Concluído";
     }
 
-    String returnData = String.format(
+    return String.format(
       """
       Nome: %s
       Descrição: %s
@@ -255,7 +255,6 @@ public class Task {
       tagNames,
       subTaskNames
     );
-    return returnData;
   }
 
   /**
