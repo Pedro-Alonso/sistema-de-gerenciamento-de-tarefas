@@ -7,7 +7,8 @@ import java.util.function.Function;
 
 public class Task {
 
-  private UUID taskId;
+  private UUID id;
+  private UUID userId;
   private String name;
   private String description;
   private LocalDate deadline;
@@ -23,25 +24,31 @@ public class Task {
   }
 
   public Task(
+    UUID userId,
     String name,
     String description,
     LocalDate deadline,
     int priority
   ) {
+    this.userId = userId;
     this.name = name;
     this.description = description;
     this.deadline = deadline;
     this.priority = priority;
 
-    this.taskId = UUID.randomUUID();
+    this.id = UUID.randomUUID();
     this.status = Status.TODO;
 
     this.tags = new ArrayList<Tag>();
     this.subTasks = new ArrayList<SubTask>();
   }
 
-  public UUID getTaskId() {
-    return taskId;
+  public UUID getid() {
+    return id;
+  }
+
+  public UUID getUserId() {
+    return userId;
   }
 
   public String getName() {
@@ -93,7 +100,7 @@ public class Task {
   }
 
   /**
-   * Method to add a Tag to the current Task object
+   * Method to add a Tag to the current Task object. If the Tag already exists on the Task tags, it will not be added
    * @category Method
    * @return void
    */
@@ -149,7 +156,7 @@ public class Task {
    * @return void
    */
   public void addSubTask(SubTask subTask) {
-    SubTask st = getSubTaskById(subTask.getTaskId());
+    SubTask st = getSubTaskById(subTask.getid());
     if (st == null) subTasks.add(subTask);
     return;
   }
@@ -161,7 +168,7 @@ public class Task {
    */
   public SubTask getSubTaskById(UUID id) {
     for (SubTask subTask : subTasks) {
-      if (subTask.getTaskId() == id) return subTask;
+      if (subTask.getid() == id) return subTask;
     }
     return null;
   }
@@ -174,7 +181,7 @@ public class Task {
   private int getSubTaskIndex(UUID id) {
     int index = -1;
     for (int i = 0; i < subTasks.size(); i++) {
-      if (subTasks.get(i).getTaskId() == id) {
+      if (subTasks.get(i).getid() == id) {
         index = i;
         break;
       }
@@ -218,12 +225,12 @@ public class Task {
   }
 
   /**
-   * Method that returns a String with all the information about the current Task object, except for the taskId
+   * Method that returns a String with all the information about the current Task object, except for the id
    * @category Method
    * @return String
    */
   public String printTask() {
-    String tagNames = getListString(tags, Tag::getName);
+    String tagNames = getListString(tags, Tag::getDescription);
     String subTaskNames = getListString(subTasks, SubTask::getName);
 
     String currentStatus = "";
