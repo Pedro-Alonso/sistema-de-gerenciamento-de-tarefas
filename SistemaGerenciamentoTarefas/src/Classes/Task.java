@@ -17,12 +17,20 @@ public class Task {
   private ArrayList<Tag> tags;
   private ArrayList<SubTask> subTasks;
 
-  enum Status {
+  public enum Status {
     TODO,
     DOING,
     DONE,
   }
 
+  /**
+   * Constructor for the Task class
+   * @param userId The id of the user that owns the Task
+   * @param name The name of the Task
+   * @param description The description of the Task
+   * @param deadline The deadline of the Task
+   * @param priority The priority of the Task
+   */
   public Task(
     UUID userId,
     String name,
@@ -30,71 +38,125 @@ public class Task {
     LocalDate deadline,
     int priority
   ) {
+    this.id = UUID.randomUUID();
     this.userId = userId;
     this.name = name;
     this.description = description;
     this.deadline = deadline;
     this.priority = priority;
-
-    this.id = UUID.randomUUID();
     this.status = Status.TODO;
-
     this.tags = new ArrayList<Tag>();
     this.subTasks = new ArrayList<SubTask>();
   }
 
+  /**
+   * Getter for the id of the Task
+   * @return UUID
+   */
   public UUID getid() {
     return id;
   }
 
+  /**
+   * Getter for the userId of the Task (owner)
+   * @return UUID
+   */
   public UUID getUserId() {
     return userId;
   }
 
+  /**
+   * Getter for the name of the Task
+   * @return String
+   */
   public String getName() {
     return name;
   }
 
+  /**
+   * Setter for the name of the Task
+   * @param name The new name for the Task
+   */
   public void setName(String name) {
     this.name = name;
   }
 
+  /**
+   * Getter for the description of the Task
+   * @return String
+   */
   public String getDescription() {
     return description;
   }
 
+  /**
+   * Setter for the description of the Task
+   * @param description The new description for the Task
+   */
   public void setDescription(String description) {
     this.description = description;
   }
 
+  /**
+   * Getter for the deadline of the Task
+   * @return LocalDate
+   */
   public LocalDate getDeadline() {
     return deadline;
   }
 
+  /**
+   * Setter for the deadline of the Task
+   * @param deadline The new deadline for the Task
+   */
   public void setDeadline(LocalDate deadline) {
     this.deadline = deadline;
   }
 
+  /**
+   * Getter for the priority of the Task
+   * @return int
+   */
   public int getPriority() {
     return priority;
   }
 
+  /**
+   * Setter for the priority of the Task
+   * @param priority The new priority for the Task
+   */
   public void setPriority(int priority) {
     this.priority = priority;
   }
 
+  /**
+   * Getter for the status of the Task
+   * @return Status
+   */
   public Status getStatus() {
     return status;
   }
 
+  /**
+   * Setter for the status of the Task
+   * @param status The new status for the Task
+   */
   public void setStatus(Status status) {
     this.status = status;
   }
 
+  /**
+   * Getter for the tags of the Task
+   * @return ArrayList<Tag>
+   */
   public ArrayList<Tag> getTags() {
     return tags;
   }
 
+  /**
+   * Getter for the subTasks of the Task
+   * @return ArrayList<SubTask>
+   */
   public ArrayList<SubTask> getSubTasks() {
     return subTasks;
   }
