@@ -13,11 +13,11 @@ public class Task {
   private String description;
   private LocalDate deadline;
   private int priority;
-  private Status status;
+  private TaskStatus status;
   private ArrayList<Tag> tags;
   private ArrayList<SubTask> subTasks;
 
-  public enum Status {
+  public enum TaskStatus {
     TODO,
     DOING,
     DONE,
@@ -44,7 +44,7 @@ public class Task {
     this.description = description;
     this.deadline = deadline;
     this.priority = priority;
-    this.status = Status.TODO;
+    this.status = TaskStatus.TODO;
     this.tags = new ArrayList<Tag>();
     this.subTasks = new ArrayList<SubTask>();
   }
@@ -124,17 +124,17 @@ public class Task {
   }
 
   /**
-   * {@return the status of the Task as a {@link Status}}
+   * {@return the status of the Task as a {@link TaskStatus}}
    */
-  public Status getStatus() {
+  public TaskStatus getStatus() {
     return status;
   }
 
   /**
    * Setter for the status of the Task
-   * @param status The new status for the Task -> {@link Status}
+   * @param status The new status for the Task -> {@link TaskStatus}
    */
-  public void setStatus(Status status) {
+  public void setStatus(TaskStatus status) {
     this.status = status;
   }
 
@@ -299,7 +299,7 @@ public class Task {
       Descrição: %s
       Prazo: %s
       Prioridade: %s
-      Status: %s
+      TaskStatus: %s
       Etiquetas: %s
       Sub tarefas: %s
       """,
