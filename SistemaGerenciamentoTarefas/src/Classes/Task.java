@@ -7,95 +7,154 @@ import java.util.function.Function;
 
 public class Task {
 
-  private UUID taskId;
+  private UUID id;
+  private UUID userId;
   private String name;
   private String description;
   private LocalDate deadline;
   private int priority;
-  private Status status;
+  private TaskStatus status;
   private ArrayList<Tag> tags;
   private ArrayList<SubTask> subTasks;
 
-  enum Status {
+  public enum TaskStatus {
     TODO,
     DOING,
     DONE,
   }
 
+  /**
+   * Constructor for the Task class
+   * @param userId The id of the user that owns the Task -> {@link UUID}
+   * @param name The name of the Task -> {@link String}
+   * @param description The description of the Task -> {@link String}
+   * @param deadline The deadline of the Task -> {@link LocalDate}
+   * @param priority The priority of the Task -> {@code int}
+   */
   public Task(
+    UUID userId,
     String name,
     String description,
     LocalDate deadline,
     int priority
   ) {
+    this.id = UUID.randomUUID();
+    this.userId = userId;
     this.name = name;
     this.description = description;
     this.deadline = deadline;
     this.priority = priority;
-
-    this.taskId = UUID.randomUUID();
-    this.status = Status.TODO;
-
+    this.status = TaskStatus.TODO;
     this.tags = new ArrayList<Tag>();
     this.subTasks = new ArrayList<SubTask>();
   }
 
-  public UUID getTaskId() {
-    return taskId;
+  /**
+   * {@return the id of the Task as a {@link UUID}}
+   */
+  public UUID getid() {
+    return id;
   }
 
+  /**
+   * {@return the id of the user that owns the Task as a {@link UUID}}
+   */
+  public UUID getUserId() {
+    return userId;
+  }
+
+  /**
+   * {@return the name of the Task as a {@link String}}
+   */
   public String getName() {
     return name;
   }
 
+  /**
+   * Setter for the name of the Task
+   * @param name The new name for the Task -> {@link String}
+   */
   public void setName(String name) {
     this.name = name;
   }
 
+  /**
+   * {@return the description of the Task as a {@link String}}
+   */
   public String getDescription() {
     return description;
   }
 
+  /**
+   * Setter for the description of the Task
+   * @param description The new description for the Task -> {@link String}
+   */
   public void setDescription(String description) {
     this.description = description;
   }
 
+  /**
+   * {@return the deadline of the Task as a {@link LocalDate}}
+   */
   public LocalDate getDeadline() {
     return deadline;
   }
 
+  /**
+   * Setter for the deadline of the Task
+   * @param deadline The new deadline for the Task -> {@link LocalDate}
+   */
   public void setDeadline(LocalDate deadline) {
     this.deadline = deadline;
   }
 
+  /**
+   * {@return the priority of the Task as a {@code int}}
+   */
   public int getPriority() {
     return priority;
   }
 
+  /**
+   * Setter for the priority of the Task
+   * @param priority The new priority for the Task -> {@code int}
+   */
   public void setPriority(int priority) {
     this.priority = priority;
   }
 
-  public Status getStatus() {
+  /**
+   * {@return the status of the Task as a {@link TaskStatus}}
+   */
+  public TaskStatus getStatus() {
     return status;
   }
 
-  public void setStatus(Status status) {
+  /**
+   * Setter for the status of the Task
+   * @param status The new status for the Task -> {@link TaskStatus}
+   */
+  public void setStatus(TaskStatus status) {
     this.status = status;
   }
 
+  /**
+   * {@return the tags of the Task as a {@link ArrayList} of {@link Tag}}
+   */
   public ArrayList<Tag> getTags() {
     return tags;
   }
 
+  /**
+   * {@return the subTasks of the Task as a {@link ArrayList} of {@link SubTask}}
+   */
   public ArrayList<SubTask> getSubTasks() {
     return subTasks;
   }
 
   /**
-   * Method to add a Tag to the current Task object
-   * @category Method
-   * @return void
+   * Method to add a Tag to the current Task object. If the Tag already exists on the Task tags, it will not be added
+   * @param tag The Tag object to be added to the Task tags -> {@link Tag}
    */
   public void addTag(Tag tag) {
     Tag t = getTagById(tag.getId());
@@ -105,8 +164,8 @@ public class Task {
 
   /**
    * Method to get the Tag object on this Task tags, if exists
-   * @param id
-   * @return Tag -> Tag if exists, null if not
+   * @param id The id of the Tag to be searched -> {@link UUID}
+   * @return {@link Tag} | {@code null} if not exists
    */
   public Tag getTagById(UUID id) {
     for (Tag tag : tags) {
@@ -117,8 +176,8 @@ public class Task {
 
   /**
    * Method to get the index of a specific Tag on this Task tags
-   * @param id
-   * @return int -> index if exists, -1 if not
+   * @param id The id of the Tag to be searched -> {@link UUID}
+   * @return {@code int} | {@code -1} if not exists
    */
   private int getTagIndex(UUID id) {
     int index = -1;
@@ -133,8 +192,8 @@ public class Task {
 
   /**
    * Method to remove a Tag from this Task tags of a given ig
-   * @param id
-   * @return boolean -> true if removed, false if not exists
+   * @param id The id of the Tag to be removed -> {@link UUID}
+   * @return {@code boolean} | {@code true} if removed, {@code false} if not exists
    */
   public boolean removeTag(UUID id) {
     int tagIndex = getTagIndex(id);
@@ -145,36 +204,35 @@ public class Task {
 
   /**
    * Method to add a SubTask to the current Task object
-   * @category Method
-   * @return void
+   * @param subTask The SubTask object to be added to the Task subTasks -> {@link SubTask}
    */
   public void addSubTask(SubTask subTask) {
-    SubTask st = getSubTaskById(subTask.getTaskId());
+    SubTask st = getSubTaskById(subTask.getid());
     if (st == null) subTasks.add(subTask);
     return;
   }
 
   /**
    * Method to get the SubTask object on this Task subTasks, if exists
-   * @param id
-   * @return SubTask -> SubTask if exists, null if not
+   * @param id The id of the SubTask to be searched -> {@link UUID}
+   * @return {@link SubTask} | {@code null} if not exists
    */
   public SubTask getSubTaskById(UUID id) {
     for (SubTask subTask : subTasks) {
-      if (subTask.getTaskId() == id) return subTask;
+      if (subTask.getid() == id) return subTask;
     }
     return null;
   }
 
   /**
    * Method to get the index of a specific SubTask on this Task subTasks
-   * @param id
-   * @return int -> index if exists, -1 if not
+   * @param id The id of the SubTask to be searched -> {@link UUID}
+   * @return {@code int} | {@code -1} if not exists
    */
   private int getSubTaskIndex(UUID id) {
     int index = -1;
     for (int i = 0; i < subTasks.size(); i++) {
-      if (subTasks.get(i).getTaskId() == id) {
+      if (subTasks.get(i).getid() == id) {
         index = i;
         break;
       }
@@ -184,8 +242,8 @@ public class Task {
 
   /**
    * Method to remove a SubTask from this Task subTasks of a given ig
-   * @param id
-   * @return boolean -> true if removed, false if not exists
+   * @param id The id of the SubTask to be removed -> {@link UUID}
+   * @return {@code boolean} | {@code true} if removed, {@code false} if not exists
    */
   public boolean removeSubTask(UUID id) {
     int subTaskIndex = getSubTaskIndex(id);
@@ -196,11 +254,10 @@ public class Task {
 
   /**
    * Method to get all elements of a given ArrayList<T> and return a String with their names, using the equivalent getName() method of the T class
-   * @category Method
-   * @param array ArrayList if T class
-   * @param getNameFunc Equivalent function of getName() on T class
-   * @return void
+   * @param array The ArrayList<> of given class T to be used -> {@link ArrayList}
+   * @param getNameFunc Equivalent function of getName() on T class -> {@link Function}
    *
+   * @return {@link String}
    * Example: getListString(tasks, Task::getName);
    */
   private <T> String getListString(
@@ -218,12 +275,11 @@ public class Task {
   }
 
   /**
-   * Method that returns a String with all the information about the current Task object, except for the taskId
-   * @category Method
-   * @return String
+   * Method that returns a String with all the information about the current Task object, except for the id
+   * @return {@link String}
    */
   public String printTask() {
-    String tagNames = getListString(tags, Tag::getName);
+    String tagNames = getListString(tags, Tag::getDescription);
     String subTaskNames = getListString(subTasks, SubTask::getName);
 
     String currentStatus = "";
@@ -243,7 +299,7 @@ public class Task {
       Descrição: %s
       Prazo: %s
       Prioridade: %s
-      Status: %s
+      TaskStatus: %s
       Etiquetas: %s
       Sub tarefas: %s
       """,
@@ -259,8 +315,6 @@ public class Task {
 
   /**
    * Method to increment (by one) the priority of the current Task object
-   * @category Method
-   * @return void
    */
   public void incrementPriority() {
     this.priority += 1;
@@ -268,8 +322,6 @@ public class Task {
 
   /**
    * Method to decrement (by one) the priority of the current Task object
-   * @category Method
-   * @return void
    */
   public void decrementPriority() {
     this.priority -= 1;
