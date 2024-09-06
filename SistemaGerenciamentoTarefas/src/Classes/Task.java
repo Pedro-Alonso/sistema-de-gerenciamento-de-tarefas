@@ -75,7 +75,14 @@ public class Task {
    * @param name The new name for the Task -> {@link String}
    */
   public void setName(String name) {
-    this.name = name;
+    try {
+      if (name.isBlank()) throw new IllegalArgumentException(
+        "O nome da tarefa não pode ser vazio"
+      );
+      this.name = name;
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   /**
@@ -90,7 +97,14 @@ public class Task {
    * @param description The new description for the Task -> {@link String}
    */
   public void setDescription(String description) {
-    this.description = description;
+    try {
+      if (description.isBlank()) throw new IllegalArgumentException(
+        "A descrição da tarefa não pode ser vazia"
+      );
+      this.description = description;
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   /**
@@ -105,7 +119,16 @@ public class Task {
    * @param deadline The new deadline for the Task -> {@link LocalDate}
    */
   public void setDeadline(LocalDate deadline) {
-    this.deadline = deadline;
+    try {
+      if (
+        deadline.isBefore(LocalDate.now())
+      ) throw new IllegalArgumentException(
+        "A data limite da tarefa não pode ser anterior a data atual"
+      );
+      this.deadline = deadline;
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   /**
@@ -120,7 +143,14 @@ public class Task {
    * @param priority The new priority for the Task -> {@code int}
    */
   public void setPriority(int priority) {
-    this.priority = priority;
+    try {
+      if (priority < 0) throw new IllegalArgumentException(
+        "A prioridade da tarefa não pode ser negativa"
+      );
+      this.priority = priority;
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   /**
@@ -135,7 +165,14 @@ public class Task {
    * @param status The new status for the Task -> {@link TaskStatus}
    */
   public void setStatus(TaskStatus status) {
-    this.status = status;
+    try {
+      if (status == null) throw new IllegalArgumentException(
+        "O status da tarefa não pode ser nulo"
+      );
+      this.status = status;
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   /**
@@ -157,9 +194,13 @@ public class Task {
    * @param tag The Tag object to be added to the Task tags -> {@link Tag}
    */
   public void addTag(Tag tag) {
-    Tag t = getTagById(tag.getId());
-    if (t == null) tags.add(tag);
-    return;
+    try {
+      Tag t = getTagById(tag.getId());
+      if (t == null) tags.add(tag);
+      return;
+    } catch (Exception e) {
+      System.out.println("Erro ao adicionar a tag: " + e.getMessage());
+    }
   }
 
   /**
@@ -196,10 +237,15 @@ public class Task {
    * @return {@code boolean} | {@code true} if removed, {@code false} if not exists
    */
   public boolean removeTag(UUID id) {
-    int tagIndex = getTagIndex(id);
-    if (tagIndex == -1) return false;
-    tags.remove(tagIndex);
-    return true;
+    try {
+      int tagIndex = getTagIndex(id);
+      if (tagIndex == -1) return false;
+      tags.remove(tagIndex);
+      return true;
+    } catch (Exception e) {
+      System.out.println("Erro ao remover a tag: " + e.getMessage());
+      return false;
+    }
   }
 
   /**
@@ -207,9 +253,13 @@ public class Task {
    * @param subTask The SubTask object to be added to the Task subTasks -> {@link SubTask}
    */
   public void addSubTask(SubTask subTask) {
-    SubTask st = getSubTaskById(subTask.getId());
-    if (st == null) subTasks.add(subTask);
-    return;
+    try {
+      SubTask st = getSubTaskById(subTask.getId());
+      if (st == null) subTasks.add(subTask);
+      return;
+    } catch (Exception e) {
+      System.out.println("Erro ao adicionar a sub tarefa: " + e.getMessage());
+    }
   }
 
   /**
@@ -246,10 +296,15 @@ public class Task {
    * @return {@code boolean} | {@code true} if removed, {@code false} if not exists
    */
   public boolean removeSubTask(UUID id) {
-    int subTaskIndex = getSubTaskIndex(id);
-    if (subTaskIndex == -1) return false;
-    subTasks.remove(subTaskIndex);
-    return true;
+    try {
+      int subTaskIndex = getSubTaskIndex(id);
+      if (subTaskIndex == -1) return false;
+      subTasks.remove(subTaskIndex);
+      return true;
+    } catch (Exception e) {
+      System.out.println("Erro ao remover a sub tarefa: " + e.getMessage());
+      return false;
+    }
   }
 
   /**
