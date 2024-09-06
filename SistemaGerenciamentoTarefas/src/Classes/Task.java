@@ -52,7 +52,7 @@ public class Task {
   /**
    * {@return the id of the Task as a {@link UUID}}
    */
-  public UUID getid() {
+  public UUID getId() {
     return id;
   }
 
@@ -207,7 +207,7 @@ public class Task {
    * @param subTask The SubTask object to be added to the Task subTasks -> {@link SubTask}
    */
   public void addSubTask(SubTask subTask) {
-    SubTask st = getSubTaskById(subTask.getid());
+    SubTask st = getSubTaskById(subTask.getId());
     if (st == null) subTasks.add(subTask);
     return;
   }
@@ -219,7 +219,7 @@ public class Task {
    */
   public SubTask getSubTaskById(UUID id) {
     for (SubTask subTask : subTasks) {
-      if (subTask.getid() == id) return subTask;
+      if (subTask.getId() == id) return subTask;
     }
     return null;
   }
@@ -232,7 +232,7 @@ public class Task {
   private int getSubTaskIndex(UUID id) {
     int index = -1;
     for (int i = 0; i < subTasks.size(); i++) {
-      if (subTasks.get(i).getid() == id) {
+      if (subTasks.get(i).getId() == id) {
         index = i;
         break;
       }
