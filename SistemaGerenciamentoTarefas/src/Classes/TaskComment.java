@@ -31,7 +31,7 @@ public class TaskComment extends Comment {
     }
 
     @Override
-    protected void displayComment() {
+    public void displayComment() {
         System.out.println("Task ID: " + taskId);
         super.displayComment();
     }
