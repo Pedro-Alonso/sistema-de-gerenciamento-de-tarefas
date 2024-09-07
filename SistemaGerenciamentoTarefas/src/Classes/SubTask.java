@@ -15,6 +15,8 @@ public class SubTask extends Task {
 
     public SubTask (UUID userId, String name, String description, LocalDate deadline, int priority) {
         super(userId, name, description, deadline, priority);
+        steps = new ArrayList<String>();
+        stepsStatus = new ArrayList<Boolean>();
     }
 
     // Methods
