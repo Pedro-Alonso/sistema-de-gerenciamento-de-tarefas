@@ -1,33 +1,37 @@
 package SistemaGerenciamentoTarefas.src.Classes;
 
 import java.time.LocalDate;
+import java.util.UUID;
+import java.util.ArrayList;
 
-public class Projeto {
-    
-    protected int taskCount;
-    protected LocalDate beginDate;
-    protected LocalDate limitDate;
-    protected int max;
-    protected String name;
-    protected Task taskArray[];
+public class Project {
+
+    private UUID id;
+    private int taskCount;
+    private LocalDate beginDate;
+    private LocalDate limitDate;
+    private int max;
+    private String name;
+    private ArrayList<Task> taskArray;
 
     //constructor method
-    public Projeto(LocalDate beginDate, LocalDate limitDate, String name)
+    public Project(LocalDate beginDate, LocalDate limitDate, String name)
     {
+        id = UUID.randomUUID();  
         this.beginDate = beginDate;
         this.limitDate = limitDate;
         taskCount = 0; //esse é só pra esse objeto, ou para toda a classe?
         max = 50;
         this.name = name;
-        taskArray = new Task[max];
+        taskArray = new ArrayList<Task>();
     }
 
     //method to search tasks of the project
-    public int searchTask (String id)
+    public int searchTask (UUID id)
     {
-        for (int i = 0; i < taskCount; i++)
+        for (int i = 0; i < taskArray.size(); i++)
         {
-            if (taskArray[i].getId().equals(id))
+            if (taskArray.get(i).getId().equals(id))
             {
                 return i;
             }
@@ -41,40 +45,30 @@ public class Projeto {
     {
         if(taskCount < max)
         {
-            taskArray[taskCount] = t;
+            taskArray.add(t);
             taskCount++;
         }
     }
 
-    public void removeTask (String id)
+    public void removeTask (UUID id)
     {
         int i = searchTask(id);
 
         if(i != -1)
         {
-            if (i < taskCount)
-            {
-                int j = 0;
-                for (j = i; j < taskCount; j++)
-                {
-                    taskArray[j] = taskArray[j+1];
-
-                }
-
-                taskArray[taskCount - 1] = null;
-                taskCount--;
-            }
-            else //if i == taskCount means that you found the task in the last array's position
-            {
-                taskArray[i] = null;
-                taskCount--;
-            }
+            taskArray.remove(i);
         }
     }
 
 
 
     //getters e setters
+
+    public UUID getId()
+    {
+        return id;
+    }
+
     public LocalDate getBeginDate()
     {
         return beginDate;
