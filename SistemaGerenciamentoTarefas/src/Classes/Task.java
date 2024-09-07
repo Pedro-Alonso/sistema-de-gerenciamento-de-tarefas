@@ -16,6 +16,7 @@ public class Task {
   private TaskStatus status;
   private ArrayList<Tag> tags;
   private ArrayList<SubTask> subTasks;
+  private ArrayList<TaskComment> comments;
 
   public enum TaskStatus {
     TODO,
@@ -47,6 +48,7 @@ public class Task {
     this.status = TaskStatus.TODO;
     this.tags = new ArrayList<Tag>();
     this.subTasks = new ArrayList<SubTask>();
+    this.comments = new ArrayList<TaskComment>();
   }
 
   /**
@@ -317,6 +319,73 @@ public class Task {
   }
 
   /**
+   * Method to add a TaskComment to the current Task object
+   * @param comment The TaskComment object to be added to the Task comments -> {@link TaskComment}
+   * @throws Exception if an error occurs while adding the TaskComment
+   */
+  public void addComment(TaskComment comment) {
+    try {
+      comments.add(comment);
+      return;
+    } catch (Exception e) {
+      System.out.println("Erro ao adicionar o comentário: " + e.getMessage());
+    }
+  }
+
+  /**
+   * Method to get the TaskComment object on this Task comments, if exists
+   * @param id The id of the TaskComment to be searched -> {@link UUID}
+   * @return {@link TaskComment} | {@code null} if not exists
+   */
+  public TaskComment getCommentById(UUID id) {
+    for (TaskComment comment : comments) {
+      if (comment.getId() == id) return comment;
+    }
+    return null;
+  }
+
+  /**
+   * Method to get the index of a specific TaskComment on this Task comments
+   * @param id The id of the TaskComment to be searched -> {@link UUID}
+   * @return {@code int} | {@code -1} if not exists
+   */
+  private int getCommentIndex(UUID id) {
+    int index = -1;
+    for (int i = 0; i < comments.size(); i++) {
+      if (comments.get(i).getId() == id) {
+        index = i;
+        break;
+      }
+    }
+    return index;
+  }
+
+  /**
+   * Method to remove a TaskComment from this Task comments of a given ig
+   * @param id The id of the TaskComment to be removed -> {@link UUID}
+   * @return {@code boolean} | {@code true} if removed, {@code false} if not exists
+   * @throws Exception if an error occurs while removing the TaskComment
+   */
+  public boolean removeComment(UUID id) {
+    try {
+      int commentIndex = getCommentIndex(id);
+      if (commentIndex == -1) return false;
+      comments.remove(commentIndex);
+      return true;
+    } catch (Exception e) {
+      System.out.println("Erro ao remover o comentário: " + e.getMessage());
+      return false;
+    }
+  }
+
+  /**
+   * {@return the number of comments on the Task as a {@code int}}
+   */
+  public int getCommentsCount() {
+    return comments.size();
+  }
+
+  /**
    * Method to get all elements of a given ArrayList<T> and return a String with their names, using the equivalent getName() method of the T class
    * @param array The ArrayList<> of given class T to be used -> {@link ArrayList}
    * @param getNameFunc Equivalent function of getName() on T class -> {@link Function}
@@ -366,6 +435,7 @@ public class Task {
       TaskStatus: %s
       Etiquetas: %s
       Sub tarefas: %s
+      Número de comentários: %s
       """,
       name,
       description,
@@ -373,7 +443,8 @@ public class Task {
       priority,
       currentStatus,
       tagNames,
-      subTaskNames
+      subTaskNames,
+      getCommentsCount()
     );
   }
 

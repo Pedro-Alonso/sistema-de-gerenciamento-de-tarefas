@@ -99,4 +99,9 @@ public class Project {
         this.name = name;
     }
 
+    public ArrayList<Task> getTaskArray()
+    {
+        return taskArray;
+    }
+
 }
