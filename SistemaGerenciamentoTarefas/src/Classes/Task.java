@@ -73,6 +73,7 @@ public class Task {
   /**
    * Setter for the name of the Task
    * @param name The new name for the Task -> {@link String}
+   * @throws IllegalArgumentException if the name is blank
    */
   public void setName(String name) {
     try {
@@ -95,6 +96,7 @@ public class Task {
   /**
    * Setter for the description of the Task
    * @param description The new description for the Task -> {@link String}
+   * @throws IllegalArgumentException if the description is blank
    */
   public void setDescription(String description) {
     try {
@@ -117,6 +119,7 @@ public class Task {
   /**
    * Setter for the deadline of the Task
    * @param deadline The new deadline for the Task -> {@link LocalDate}
+   * @throws IllegalArgumentException if the deadline is before the current date
    */
   public void setDeadline(LocalDate deadline) {
     try {
@@ -141,6 +144,7 @@ public class Task {
   /**
    * Setter for the priority of the Task
    * @param priority The new priority for the Task -> {@code int}
+   * @throws IllegalArgumentException if the priority is negative
    */
   public void setPriority(int priority) {
     try {
@@ -163,6 +167,7 @@ public class Task {
   /**
    * Setter for the status of the Task
    * @param status The new status for the Task -> {@link TaskStatus}
+   * @throws IllegalArgumentException if the status is null
    */
   public void setStatus(TaskStatus status) {
     try {
@@ -192,6 +197,7 @@ public class Task {
   /**
    * Method to add a Tag to the current Task object. If the Tag already exists on the Task tags, it will not be added
    * @param tag The Tag object to be added to the Task tags -> {@link Tag}
+   * @throws Exception if an error occurs while adding the Tag
    */
   public void addTag(Tag tag) {
     try {
@@ -235,6 +241,7 @@ public class Task {
    * Method to remove a Tag from this Task tags of a given ig
    * @param id The id of the Tag to be removed -> {@link UUID}
    * @return {@code boolean} | {@code true} if removed, {@code false} if not exists
+   * @throws Exception if an error occurs while removing the Tag
    */
   public boolean removeTag(UUID id) {
     try {
@@ -251,6 +258,7 @@ public class Task {
   /**
    * Method to add a SubTask to the current Task object
    * @param subTask The SubTask object to be added to the Task subTasks -> {@link SubTask}
+   * @throws Exception if an error occurs while adding the SubTask
    */
   public void addSubTask(SubTask subTask) {
     try {
@@ -294,6 +302,7 @@ public class Task {
    * Method to remove a SubTask from this Task subTasks of a given ig
    * @param id The id of the SubTask to be removed -> {@link UUID}
    * @return {@code boolean} | {@code true} if removed, {@code false} if not exists
+   * @throws Exception if an error occurs while removing the SubTask
    */
   public boolean removeSubTask(UUID id) {
     try {
