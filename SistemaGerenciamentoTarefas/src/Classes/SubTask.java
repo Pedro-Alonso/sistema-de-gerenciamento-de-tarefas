@@ -2,6 +2,7 @@ package SistemaGerenciamentoTarefas.src.Classes;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class SubTask extends Task {
     /*
@@ -12,8 +13,10 @@ public class SubTask extends Task {
     private ArrayList<String> steps;
     private ArrayList<Boolean> stepsStatus;
 
-    public SubTask (String name, String description, LocalDate deadline, int priority) {
-        super(name, description, deadline, priority);
+    public SubTask (UUID userId, String name, String description, LocalDate deadline, int priority) {
+        super(userId, name, description, deadline, priority);
+        steps = new ArrayList<String>();
+        stepsStatus = new ArrayList<Boolean>();
     }
 
     // Methods

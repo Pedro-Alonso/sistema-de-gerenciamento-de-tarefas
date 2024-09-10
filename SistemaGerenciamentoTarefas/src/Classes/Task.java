@@ -16,6 +16,7 @@ public class Task {
   private TaskStatus status;
   private ArrayList<Tag> tags;
   private ArrayList<SubTask> subTasks;
+  private ArrayList<TaskComment> comments;
 
   public enum TaskStatus {
     TODO,
@@ -47,12 +48,13 @@ public class Task {
     this.status = TaskStatus.TODO;
     this.tags = new ArrayList<Tag>();
     this.subTasks = new ArrayList<SubTask>();
+    this.comments = new ArrayList<TaskComment>();
   }
 
   /**
    * {@return the id of the Task as a {@link UUID}}
    */
-  public UUID getid() {
+  public UUID getId() {
     return id;
   }
 
@@ -73,9 +75,17 @@ public class Task {
   /**
    * Setter for the name of the Task
    * @param name The new name for the Task -> {@link String}
+   * @throws IllegalArgumentException if the name is blank
    */
   public void setName(String name) {
-    this.name = name;
+    try {
+      if (name.isBlank()) throw new IllegalArgumentException(
+        "O nome da tarefa não pode ser vazio"
+      );
+      this.name = name;
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   /**
@@ -88,9 +98,17 @@ public class Task {
   /**
    * Setter for the description of the Task
    * @param description The new description for the Task -> {@link String}
+   * @throws IllegalArgumentException if the description is blank
    */
   public void setDescription(String description) {
-    this.description = description;
+    try {
+      if (description.isBlank()) throw new IllegalArgumentException(
+        "A descrição da tarefa não pode ser vazia"
+      );
+      this.description = description;
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   /**
@@ -103,9 +121,19 @@ public class Task {
   /**
    * Setter for the deadline of the Task
    * @param deadline The new deadline for the Task -> {@link LocalDate}
+   * @throws IllegalArgumentException if the deadline is before the current date
    */
   public void setDeadline(LocalDate deadline) {
-    this.deadline = deadline;
+    try {
+      if (
+        deadline.isBefore(LocalDate.now())
+      ) throw new IllegalArgumentException(
+        "A data limite da tarefa não pode ser anterior a data atual"
+      );
+      this.deadline = deadline;
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   /**
@@ -118,9 +146,17 @@ public class Task {
   /**
    * Setter for the priority of the Task
    * @param priority The new priority for the Task -> {@code int}
+   * @throws IllegalArgumentException if the priority is negative
    */
   public void setPriority(int priority) {
-    this.priority = priority;
+    try {
+      if (priority < 0) throw new IllegalArgumentException(
+        "A prioridade da tarefa não pode ser negativa"
+      );
+      this.priority = priority;
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   /**
@@ -133,9 +169,17 @@ public class Task {
   /**
    * Setter for the status of the Task
    * @param status The new status for the Task -> {@link TaskStatus}
+   * @throws IllegalArgumentException if the status is null
    */
   public void setStatus(TaskStatus status) {
-    this.status = status;
+    try {
+      if (status == null) throw new IllegalArgumentException(
+        "O status da tarefa não pode ser nulo"
+      );
+      this.status = status;
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   /**
@@ -155,11 +199,16 @@ public class Task {
   /**
    * Method to add a Tag to the current Task object. If the Tag already exists on the Task tags, it will not be added
    * @param tag The Tag object to be added to the Task tags -> {@link Tag}
+   * @throws Exception if an error occurs while adding the Tag
    */
   public void addTag(Tag tag) {
-    Tag t = getTagById(tag.getId());
-    if (t == null) tags.add(tag);
-    return;
+    try {
+      Tag t = getTagById(tag.getId());
+      if (t == null) tags.add(tag);
+      return;
+    } catch (Exception e) {
+      System.out.println("Erro ao adicionar a tag: " + e.getMessage());
+    }
   }
 
   /**
@@ -194,22 +243,33 @@ public class Task {
    * Method to remove a Tag from this Task tags of a given ig
    * @param id The id of the Tag to be removed -> {@link UUID}
    * @return {@code boolean} | {@code true} if removed, {@code false} if not exists
+   * @throws Exception if an error occurs while removing the Tag
    */
   public boolean removeTag(UUID id) {
-    int tagIndex = getTagIndex(id);
-    if (tagIndex == -1) return false;
-    tags.remove(tagIndex);
-    return true;
+    try {
+      int tagIndex = getTagIndex(id);
+      if (tagIndex == -1) return false;
+      tags.remove(tagIndex);
+      return true;
+    } catch (Exception e) {
+      System.out.println("Erro ao remover a tag: " + e.getMessage());
+      return false;
+    }
   }
 
   /**
    * Method to add a SubTask to the current Task object
    * @param subTask The SubTask object to be added to the Task subTasks -> {@link SubTask}
+   * @throws Exception if an error occurs while adding the SubTask
    */
   public void addSubTask(SubTask subTask) {
-    SubTask st = getSubTaskById(subTask.getid());
-    if (st == null) subTasks.add(subTask);
-    return;
+    try {
+      SubTask st = getSubTaskById(subTask.getId());
+      if (st == null) subTasks.add(subTask);
+      return;
+    } catch (Exception e) {
+      System.out.println("Erro ao adicionar a sub tarefa: " + e.getMessage());
+    }
   }
 
   /**
@@ -219,7 +279,7 @@ public class Task {
    */
   public SubTask getSubTaskById(UUID id) {
     for (SubTask subTask : subTasks) {
-      if (subTask.getid() == id) return subTask;
+      if (subTask.getId() == id) return subTask;
     }
     return null;
   }
@@ -232,7 +292,7 @@ public class Task {
   private int getSubTaskIndex(UUID id) {
     int index = -1;
     for (int i = 0; i < subTasks.size(); i++) {
-      if (subTasks.get(i).getid() == id) {
+      if (subTasks.get(i).getId() == id) {
         index = i;
         break;
       }
@@ -244,12 +304,85 @@ public class Task {
    * Method to remove a SubTask from this Task subTasks of a given ig
    * @param id The id of the SubTask to be removed -> {@link UUID}
    * @return {@code boolean} | {@code true} if removed, {@code false} if not exists
+   * @throws Exception if an error occurs while removing the SubTask
    */
   public boolean removeSubTask(UUID id) {
-    int subTaskIndex = getSubTaskIndex(id);
-    if (subTaskIndex == -1) return false;
-    subTasks.remove(subTaskIndex);
-    return true;
+    try {
+      int subTaskIndex = getSubTaskIndex(id);
+      if (subTaskIndex == -1) return false;
+      subTasks.remove(subTaskIndex);
+      return true;
+    } catch (Exception e) {
+      System.out.println("Erro ao remover a sub tarefa: " + e.getMessage());
+      return false;
+    }
+  }
+
+  /**
+   * Method to add a TaskComment to the current Task object
+   * @param comment The TaskComment object to be added to the Task comments -> {@link TaskComment}
+   * @throws Exception if an error occurs while adding the TaskComment
+   */
+  public void addComment(TaskComment comment) {
+    try {
+      comments.add(comment);
+      return;
+    } catch (Exception e) {
+      System.out.println("Erro ao adicionar o comentário: " + e.getMessage());
+    }
+  }
+
+  /**
+   * Method to get the TaskComment object on this Task comments, if exists
+   * @param id The id of the TaskComment to be searched -> {@link UUID}
+   * @return {@link TaskComment} | {@code null} if not exists
+   */
+  public TaskComment getCommentById(UUID id) {
+    for (TaskComment comment : comments) {
+      if (comment.getId() == id) return comment;
+    }
+    return null;
+  }
+
+  /**
+   * Method to get the index of a specific TaskComment on this Task comments
+   * @param id The id of the TaskComment to be searched -> {@link UUID}
+   * @return {@code int} | {@code -1} if not exists
+   */
+  private int getCommentIndex(UUID id) {
+    int index = -1;
+    for (int i = 0; i < comments.size(); i++) {
+      if (comments.get(i).getId() == id) {
+        index = i;
+        break;
+      }
+    }
+    return index;
+  }
+
+  /**
+   * Method to remove a TaskComment from this Task comments of a given ig
+   * @param id The id of the TaskComment to be removed -> {@link UUID}
+   * @return {@code boolean} | {@code true} if removed, {@code false} if not exists
+   * @throws Exception if an error occurs while removing the TaskComment
+   */
+  public boolean removeComment(UUID id) {
+    try {
+      int commentIndex = getCommentIndex(id);
+      if (commentIndex == -1) return false;
+      comments.remove(commentIndex);
+      return true;
+    } catch (Exception e) {
+      System.out.println("Erro ao remover o comentário: " + e.getMessage());
+      return false;
+    }
+  }
+
+  /**
+   * {@return the number of comments on the Task as a {@code int}}
+   */
+  public int getCommentsCount() {
+    return comments.size();
   }
 
   /**
@@ -302,6 +435,7 @@ public class Task {
       TaskStatus: %s
       Etiquetas: %s
       Sub tarefas: %s
+      Número de comentários: %s
       """,
       name,
       description,
@@ -309,7 +443,8 @@ public class Task {
       priority,
       currentStatus,
       tagNames,
-      subTaskNames
+      subTaskNames,
+      getCommentsCount()
     );
   }
 

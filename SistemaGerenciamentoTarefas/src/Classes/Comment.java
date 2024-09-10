@@ -2,9 +2,11 @@ package SistemaGerenciamentoTarefas.src.Classes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Comment {
     // Attributes
+    private UUID id;
     private String author;
     private String text;
     private String date;
@@ -19,6 +21,7 @@ public class Comment {
      * @param date The date of the comment
      */
     public Comment(String author, String text, String date) {
+        this.id = UUID.randomUUID();
         this.author = author;
         this.text = text;
         this.date = date;
@@ -84,6 +87,10 @@ public class Comment {
             return true;
         }
         return false;
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     protected void displayComment() {

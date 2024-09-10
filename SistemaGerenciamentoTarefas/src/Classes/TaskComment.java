@@ -1,7 +1,9 @@
 package SistemaGerenciamentoTarefas.src.Classes;
 
+import java.util.UUID;
+
 public class TaskComment extends Comment {
-    private int taskId;
+    private UUID taskId;
 
     /**
      * Constructor for the TaskComment class
@@ -12,24 +14,24 @@ public class TaskComment extends Comment {
      * @param date The date of the comment
      * @param taskId The ID of the task associated with this comment
      */
-    public TaskComment(String author, String text, String date, int taskId) {
+    public TaskComment(String author, String text, String date, UUID taskId) {
         super(author, text, date); // Calls the correct constructor from Comment
-        setTaskId(taskId);
+        this.taskId = taskId;
     }
 
-    public int getTaskId() {
+    public UUID getTaskId() {
         return taskId;
     }
 
-    public void setTaskId(int taskId) {
-        if (taskId <= 0) {
-            throw new IllegalArgumentException("Task ID must be a positive integer.");
+    public void setTaskId(UUID taskId) {
+        if (taskId == null) {
+            throw new IllegalArgumentException("Task ID must exist.");
         }
         this.taskId = taskId;
     }
 
     @Override
-    protected void displayComment() {
+    public void displayComment() {
         System.out.println("Task ID: " + taskId);
         super.displayComment();
     }
