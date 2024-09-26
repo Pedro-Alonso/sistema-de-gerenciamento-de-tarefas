@@ -8,7 +8,7 @@ import java.util.function.Function;
 public class Task {
 
   private UUID id;
-  private UUID userId;
+  private UserTask user;
   private String name;
   private String description;
   private LocalDate deadline;
@@ -26,21 +26,21 @@ public class Task {
 
   /**
    * Constructor for the Task class
-   * @param userId The id of the user that owns the Task -> {@link UUID}
+   * @param user The user that owns the Task -> {@link UserTask}
    * @param name The name of the Task -> {@link String}
    * @param description The description of the Task -> {@link String}
    * @param deadline The deadline of the Task -> {@link LocalDate}
    * @param priority The priority of the Task -> {@code int}
    */
   public Task(
-    UUID userId,
+    UserTask user,
     String name,
     String description,
     LocalDate deadline,
     int priority
   ) {
     this.id = UUID.randomUUID();
-    this.userId = userId;
+    this.user = user;
     this.name = name;
     this.description = description;
     this.deadline = deadline;
@@ -61,8 +61,8 @@ public class Task {
   /**
    * {@return the id of the user that owns the Task as a {@link UUID}}
    */
-  public UUID getUserId() {
-    return userId;
+  public UserTask getUser() {
+    return user;
   }
 
   /**
@@ -248,11 +248,11 @@ public class Task {
   public boolean removeTag(UUID id) {
     try {
       int tagIndex = getTagIndex(id);
-      if (tagIndex == -1) return false;
+      if (tagIndex == -1) throw new IllegalArgumentException("Etiqueta não encontrada");
       tags.remove(tagIndex);
       return true;
     } catch (Exception e) {
-      System.out.println("Erro ao remover a tag: " + e.getMessage());
+      System.out.println("Erro ao remover a etiqueta: " + e.getMessage());
       return false;
     }
   }
@@ -264,6 +264,7 @@ public class Task {
    */
   public void addSubTask(SubTask subTask) {
     try {
+      if (this instanceof SubTask) throw new IllegalArgumentException("Não é possível adicionar uma Sub-tarefa a outra Sub-tarefa");
       SubTask st = getSubTaskById(subTask.getId());
       if (st == null) subTasks.add(subTask);
       return;
