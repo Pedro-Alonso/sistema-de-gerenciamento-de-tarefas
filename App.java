@@ -1,4 +1,6 @@
 import SistemaGerenciamentoTarefas.src.Classes.*;
+import SistemaGerenciamentoTarefas.src.Classes.user.UserTask;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 

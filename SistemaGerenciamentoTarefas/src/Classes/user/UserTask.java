@@ -1,5 +1,8 @@
-package SistemaGerenciamentoTarefas.src.Classes;
+package SistemaGerenciamentoTarefas.src.Classes.user;
 
+
+import SistemaGerenciamentoTarefas.src.Classes.Project;
+import SistemaGerenciamentoTarefas.src.Classes.Task;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

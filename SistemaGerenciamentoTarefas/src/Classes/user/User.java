@@ -1,4 +1,4 @@
-package SistemaGerenciamentoTarefas.src.Classes;
+package SistemaGerenciamentoTarefas.src.Classes.user;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
