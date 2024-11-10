@@ -29,66 +29,9 @@ public class User {
     }
 
 
-    /**
-     * Method to log in the user by checking the provided email or username and password.
-     * @param emailOrUsername The email or username used for logging in -> {@link String}
-     * @param password The password used for logging in -> {@link String}
-     * @return {@code boolean} | {@code true} if login is successful, {@code false} otherwise
-     * @throws Exception if an error occurs while processing the login
-     */
-    public boolean logIn(String emailOrUsername, String password) {
-            // Check if the provided email or name and password match the stored value
-            if (!(emailOrUsername.equals(getUsername()) || emailOrUsername.equals(getUserEmail()))) {
-                System.out.println("Email ou username incorreto");
-                return false;
-            } else if (!password.equals(getUserPassword())) {
-                System.out.println("Senha incorreta.");
-                return false;
-            } else {
-                System.out.println("Login bem sucedido");
-                return true;
-            }
-    }
+    //Login is now made into in login package
 
-    /**
-     * Method to change the current email of the User.
-     * @param oldEmail The current email that needs to be changed -> {@link String}
-     * @param newEmail The new email to set -> {@link String}
-     * @return {@code boolean} | {@code true} if the email was changed successfully, {@code false} otherwise
-     * @throws Exception if an error occurs while changing the email
-     */
-    public boolean changeEmail(String oldEmail, String newEmail) {
-            //Check if the old email matches
-            if (this.email.equals(oldEmail)) {
-                // Set the new email
-                setUserEmail(newEmail);
-                setUpdatedAt();
-                return true;
-            } else {
-                System.out.println("Erro: Email incorreto.");
-                return false;
-            }
-    }
-
-    /**
-     * Method to change the current password of the User.
-     * @param oldPassword The current password that needs to be changed -> {@link String}
-     * @param newPassword The new password to set -> {@link String}
-     * @return {@code boolean} | {@code true} if the password was changed successfully, {@code false} otherwise
-     * @throws Exception if an error occurs while changing the password
-     */
-    public boolean changePassword(String oldPassword, String newPassword) {
-            //Check if the old password matches
-            if (this.password.equals(oldPassword)) {
-                // Set the new password
-                setUserPassword(newPassword);
-                return true;
-            } else {
-                System.out.println("Erro: Senha incorreta.");
-                setUpdatedAt();
-                return false;
-            }
-    }
+    //Changes are now made in UserRepository
 
     /**
      * Method that returns a String with all the information about the current User object, except for the id
@@ -108,8 +51,8 @@ public class User {
                 getUserId(),
                 getUserEmail(),
                 getUserPassword(),
-                getFormattedDate(getCreatedAt(), "dd/MM/yyyy HH:mm:ss"),
-                getFormattedDate(getUpdatedAt(), "dd/MM/yyyy HH:mm:ss"));
+                formatDate(getCreatedAt(), "dd/MM/yyyy HH:mm:ss"),
+                formatDate(getUpdatedAt(), "dd/MM/yyyy HH:mm:ss"));
     }
 
     //setters & getters
@@ -152,7 +95,7 @@ public class User {
      */
     public LocalDateTime getUpdatedAt() { return updatedAt; }
 
-    public String getFormattedDate(LocalDateTime time, String format) {
+    public String formatDate(LocalDateTime time, String format) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
         return time.format(formatter);
     }

@@ -2,7 +2,7 @@ package SistemaGerenciamentoTarefas.src.Classes.login;
 
 import java.util.List;
 import SistemaGerenciamentoTarefas.src.Classes.user.User;
-
+import SistemaGerenciamentoTarefas.src.Classes.user.UserRepository;
 
 
 public class LoginService {
