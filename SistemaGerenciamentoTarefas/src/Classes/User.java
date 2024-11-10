@@ -1,43 +1,53 @@
 package SistemaGerenciamentoTarefas.src.Classes;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 public class User {
 
-    private String name;
-    private final UUID id = UUID.randomUUID();
+    private String username;
+    private final UUID id;
     private String email;
     private String password; // For now the password is not secure, but it will eventually;
+    private final LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     /**
-     * Constructor for the Task class
-     * @param name The name of the User -> {@link String}
-     * @param email The description of the User -> {@link String}
-     * @param password The deadline of the User -> {@link LocalDate}
+     * Constructor for the User class
+     * @param username The name of the User -> {@link String}
+     * @param email The email of the User -> {@link String}
+     * @param password The password of the User -> {@link String}
      */
-    public User(String name, String email, String password) {
-        this.name = name;
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.id = UUID.randomUUID();
         this.email = email;
         this.password = password;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = this.createdAt;
     }
 
+
     /**
-     * Method to log in the user by checking the provided email or name and password.
-     * @param emailOrName The email or name used for logging in -> {@link String}
+     * Method to log in the user by checking the provided email or username and password.
+     * @param emailOrUsername The email or username used for logging in -> {@link String}
      * @param password The password used for logging in -> {@link String}
      * @return {@code boolean} | {@code true} if login is successful, {@code false} otherwise
      * @throws Exception if an error occurs while processing the login
      */
-    public boolean logIn(String emailOrName, String password) {
-        try {
-            // Check if the provided email or name and password match the stored values
-            return ((this.email.equals(emailOrName) || this.name.equals(emailOrName)) && this.password.equals(password));
-        } catch (Exception e) {
-            // Handle any unexpected exceptions
-            System.out.println("Erro ao tentar fazer login: " + e.getMessage());
-            return false;
-        }
+    public boolean logIn(String emailOrUsername, String password) {
+            // Check if the provided email or name and password match the stored value
+            if (!(emailOrUsername.equals(getUsername()) || emailOrUsername.equals(getUserEmail()))) {
+                System.out.println("Email ou username incorreto");
+                return false;
+            } else if (!password.equals(getUserPassword())) {
+                System.out.println("Senha incorreta.");
+                return false;
+            } else {
+                System.out.println("Login bem sucedido");
+                return true;
+            }
     }
 
     /**
@@ -48,21 +58,16 @@ public class User {
      * @throws Exception if an error occurs while changing the email
      */
     public boolean changeEmail(String oldEmail, String newEmail) {
-        try {
             //Check if the old email matches
             if (this.email.equals(oldEmail)) {
                 // Set the new email
-                this.email = newEmail;
+                setUserEmail(newEmail);
+                setUpdatedAt();
                 return true;
             } else {
-                // Old email does not match
+                System.out.println("Erro: Email incorreto.");
                 return false;
             }
-        } catch (Exception e) {
-            // Handle any unexpected exceptions
-            System.out.println("Erro ao alterar o email: " + e.getMessage());
-            return false;
-        }
     }
 
     /**
@@ -73,112 +78,140 @@ public class User {
      * @throws Exception if an error occurs while changing the password
      */
     public boolean changePassword(String oldPassword, String newPassword) {
-        try {
             //Check if the old password matches
             if (this.password.equals(oldPassword)) {
                 // Set the new password
-                this.password = newPassword;
+                setUserPassword(newPassword);
                 return true;
             } else {
-                // Old password does not match
+                System.out.println("Erro: Senha incorreta.");
+                setUpdatedAt();
                 return false;
             }
-        } catch (Exception e) {
-            // Handle any unexpected exceptions
-            System.out.println("Erro ao alterar a senha: " + e.getMessage());
-            return false;
-        }
     }
 
     /**
      * Method that returns a String with all the information about the current User object, except for the id
      * @return {@link String}
      */
-    public String printUser() {
+    @Override
+    public String toString() {
         return String.format("""
                 Nome: %s
+                ID: %s
                 Email: %s
                 Password: %s
-                """, name, email, password);
+                Criado em: %s
+                Atualizado em: %s
+                """,
+                getUsername(),
+                getUserId(),
+                getUserEmail(),
+                getUserPassword(),
+                getFormattedDate(getCreatedAt(), "dd/MM/yyyy HH:mm:ss"),
+                getFormattedDate(getUpdatedAt(), "dd/MM/yyyy HH:mm:ss"));
     }
 
     //setters & getters
 
     /**
-     * {@return the name of the User as a {@link String}}
+     * {@return the username of the User as a {@link String}}
      */
-    public String getUserName() {
-        return name;
-    }
-
-    /**
-     * Setter for the name of the User
-     * @param userName The new name for the User -> {@link String}
-     * @throws IllegalArgumentException if the name is blank
-     */
-    public void setUserName(String userName) {
-        try {
-            if (userName.isBlank()) throw new IllegalArgumentException(
-                    "O nome do usuario não pode ser vazio"
-            );
-            this.name = userName;
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-        }
+    public String getUsername() {
+        return username;
     }
 
     /**
      * {@return the id of the User as a {@link UUID}}
      */
-    public UUID getId() {
+    public UUID getUserId() {
         return id;
     }
 
     /**
      * {@return the email of the User as a {@link String}}
      */
-    public String getEmail() {
+    public String getUserEmail() {
         return email;
-    }
-
-    /**
-     * Setter for the email of the User
-     * @param email The new email for the User -> {@link String}
-     * @throws IllegalArgumentException if the name is blank
-     */
-    public void setEmail(String email) {
-        try {
-            if (email.isBlank()) throw new IllegalArgumentException(
-                    "O email do usuario não pode ser vazio"
-            );
-            this.email = email;
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-        }
     }
 
     /**
      * {@return the password of the User as a {@link String}}
      */
-    public String getPassword() {
+    public String getUserPassword() {
         return password;
     }
 
     /**
-     * Setter for the password of the User
-     * @param password The new emaiil for the User -> {@link String}
-     * @throws IllegalArgumentException if the name is blank
+     * {@return the time the User account was created as a {@link LocalDateTime}}
      */
-    public void setPassword(String password) {
+    public LocalDateTime getCreatedAt() { return createdAt; }
+
+    /**
+     * {@return the time the User account was last updated as a {@link LocalDateTime}}
+     */
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+
+    public String getFormattedDate(LocalDateTime time, String format) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        return time.format(formatter);
+    }
+
+    /**
+     * Setter for the username of the User
+     * @param username The new name for the User -> {@link String}
+     * @throws IllegalArgumentException if the username is blank
+     */
+    public void setUsername(String username) {
         try {
-            if (password.isBlank()) throw new IllegalArgumentException(
-                    "A senha do usuario não pode ser vazia"
+            if (username.isBlank()) throw new IllegalArgumentException(
+                    "O nome do usuario não pode ser vazio"
             );
-            this.password = password;
+            this.username = username;
+            setUpdatedAt();
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
     }
 
+    /**
+     * Setter for the email of the User
+     * @param email The new email for the User -> {@link String}
+     * @throws IllegalArgumentException if the new email is blank
+     */
+    public void setUserEmail(String email) {
+        try {
+            if (email.isBlank()) throw new IllegalArgumentException(
+                    "O email do usuario não pode ser vazio"
+            );
+            this.email = email;
+            setUpdatedAt();
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
+    /**
+     * Setter for the password of the User
+     * @param password The new password for the User -> {@link String}
+     * @throws IllegalArgumentException if the new password is blank
+     */
+    public void setUserPassword(String password) {
+        try {
+            if (password.isBlank()) throw new IllegalArgumentException(
+                    "A senha do usuario não pode ser vazia"
+            );
+            this.password = password;
+            setUpdatedAt();
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * Setter for the time of the last update on the of the User attributes
+     */
+    public void setUpdatedAt() {
+        this.updatedAt = LocalDateTime.now();
+    }
 }
