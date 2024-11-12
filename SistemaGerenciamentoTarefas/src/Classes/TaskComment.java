@@ -1,4 +1,4 @@
-package SistemaGerenciamentoTarefas.src.Classes;
+package Classes;
 
 import java.util.UUID;
 

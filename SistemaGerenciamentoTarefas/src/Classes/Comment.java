@@ -1,4 +1,4 @@
-package SistemaGerenciamentoTarefas.src.Classes;
+package Classes;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -139,7 +139,8 @@ public class Comment {
      * @return {@link String} with the comment details
      */
     protected String displayComment() {
-        String topics = Utils.getListString(this.topics, String::toString);
+        Utils utils = new Utils();
+        String topics = utils.getListString(this.topics, String::toString);
         return String.format(
             """
             Autor: %s

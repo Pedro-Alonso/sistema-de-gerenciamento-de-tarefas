@@ -1,4 +1,4 @@
-package SistemaGerenciamentoTarefas.src.Classes;
+package Classes;
 
 
 import java.time.LocalDate;
@@ -9,10 +9,10 @@ public class UserTask extends User{
     private ArrayList<Task> tasks;
     private ArrayList<Project> projects;
 
-    public UserTask(String userName, String email, String password) {
+    public UserTask(String userName, String email, String password, ArrayList<Task> tasks, ArrayList<Project> projects) {
         super(userName, email, password);
-        this.tasks = new ArrayList<Task>();
-        this.projects = new ArrayList<Project>();
+        this.tasks = tasks;
+        this.projects = projects;
     }
 
     /**
@@ -134,7 +134,7 @@ public class UserTask extends User{
             updated = true;
         }
         if (newPriority != null) {
-            task.setPriority(newPriority);
+            task.setUrgency(newPriority);
             updated = true;
         }
         if (newStatus != null) {
@@ -190,11 +190,11 @@ public class UserTask extends User{
 
         if (project == null) return false;
 
-        int taskIndex = project.searchTask(taskId);
+        int taskIndex = project.getTaskIndexById(taskId);
 
         if (taskIndex == -1) return false;
 
-        Task task = project.getTaskArray().get(taskIndex);
+        Task task = project.getTasks().get(taskIndex);
 
         boolean updated = false;
 
@@ -211,7 +211,7 @@ public class UserTask extends User{
             updated = true;
         }
         if (newPriority != null) {
-            task.setPriority(newPriority);
+            task.setUrgency(newPriority);
             updated = true;
         }
         if (newStatus != null) {
@@ -236,7 +236,7 @@ public class UserTask extends User{
             if (project == null) return false; // Project not found
 
             // Check if the task already exists in the project
-            if (project.searchTask(newTask.getId()) != -1) return false; // Task already exists
+            if (project.getTaskIndexById(newTask.getId()) != -1) return false; // Task already exists
             // Add the task from the project
             project.addTask(newTask);
             return true;
@@ -264,7 +264,7 @@ public class UserTask extends User{
             Project project = projects.get(index);
 
             // Check if the task exists in the project
-            if (project.searchTask(taskID) == -1) return false; // Task not found
+            if (project.getTaskIndexById(taskID) == -1) return false; // Task not found
 
             // Remove the task from the project
             project.removeTask(taskID);

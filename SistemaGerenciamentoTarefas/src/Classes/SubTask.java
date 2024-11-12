@@ -1,4 +1,4 @@
-package SistemaGerenciamentoTarefas.src.Classes;
+package Classes;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,8 +12,8 @@ public class SubTask extends Task {
     private ArrayList<String> steps;
     private ArrayList<Boolean> stepsStatus;
 
-    public SubTask (UserTask user, String name, String description, LocalDate deadline, int priority) {
-        super(user, name, description, deadline, priority);
+    public SubTask (UserTask user, String name, String description, LocalDate deadline, int gravity, int urgency, int trend) {
+        super(user, name, description, deadline, gravity, urgency, trend);
         steps = new ArrayList<String>();
         stepsStatus = new ArrayList<Boolean>();
     }

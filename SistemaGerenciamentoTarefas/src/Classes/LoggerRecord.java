@@ -1,4 +1,4 @@
-package SistemaGerenciamentoTarefas.src.Classes;
+package Classes;
 
 import java.time.LocalDateTime;
 
@@ -8,16 +8,16 @@ import java.time.LocalDateTime;
 public class LoggerRecord {
     private Object editor;    
     private LocalDateTime createdAt;
-    private String subject;
+    private Object subject;
     private String message;
 
     /**
      * Constructor for the LoggerRecord class with an editor.
      * @param editor The editor of the log record -> {@link UserTask}
-     * @param subject The subject of the log record -> {@link String}
+     * @param subject The subject of the log record -> {@link Object}
      * @param message The message of the log record -> {@link String}
      */
-    public LoggerRecord(UserTask editor, String subject, String message) {
+    public LoggerRecord(UserTask editor, Object subject, String message) {
         setEditor(editor);
         setCreatedAt();
         this.subject = subject;
@@ -73,7 +73,7 @@ public class LoggerRecord {
     /**
      * {@return the subject of the log record as a {@link String}}
      */
-    public String getSubject() {
+    public Object getSubject() {
         return subject;
     }
 
@@ -98,5 +98,58 @@ public class LoggerRecord {
      */
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    /**
+     * {@return the name of the editor of the log record as a {@link String}}
+     */
+    private String getEditorName() {
+        if (editor instanceof UserTask) {
+            return ((UserTask) editor).getUserName();
+        } else {
+            return (String) editor;
+        }
+    }
+
+    /**
+     * {@return the name of the subject of the log record as a {@link String}}
+     */
+    private String getSubjectName() {
+        if (subject instanceof UserTask) {
+            return ((UserTask) subject).getUserName();
+        } else if (subject instanceof Task) {
+            return ((Task) subject).getName();
+        } else if (subject instanceof Project) {
+            return ((Project) subject).getName();
+        } else {
+            return (String) subject;
+        }
+    }
+
+    /**
+     * {@return the type of the subject of the log record as a {@link String}}
+     */
+    private String getSubjectType() {
+        if (subject instanceof UserTask) {
+            return "UserTask";
+        } else if (subject instanceof Task) {
+            return "Task";
+        } else if (subject instanceof Project) {
+            return "Project";
+        } else {
+            return "String";
+        }
+    }
+
+    /**
+     * {@return a string representation of the log record}
+     */
+    @Override
+    public String toString() {
+        return "Editor: " + getEditorName() + "\n" +
+                "Subject: " + getSubjectName() + " (" + getSubjectType() + ")\n" +
+                "Message: " + message + "\n" +
+                "Created at: " + createdAt;
+        
     }
 }
