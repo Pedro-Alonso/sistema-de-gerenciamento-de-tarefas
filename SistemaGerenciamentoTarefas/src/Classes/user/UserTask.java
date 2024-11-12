@@ -358,4 +358,34 @@ public class UserTask extends User{
      */
     public void setProjects(ArrayList<Project> projects) { this.projects = projects; }
 
+
+    public static void main(String[] args) {
+        UserTask user = new UserTask("nome", "email@teste.com", "senha");
+        Task task1 = new Task(user.getUserId(), "Tarefa 1", "Descricao", LocalDate.of(2024, 12, 1), 1);
+        Task task2 = new Task(user.getUserId(), "Tarefa 2", "Descricao", LocalDate.of(2024, 12, 1), 2);
+
+        user.addTask(task1);
+        user.addTask(task2);
+
+        System.out.println("Tarefas do usuario:");
+        System.out.println(user.printTasks());
+
+        Project project = new Project(LocalDate.of(2024, 12, 1), LocalDate.of(2024, 12, 2), "Projeto");
+
+        user.addProject(project);
+
+        user.addTaskToProject(project.getId(), task1);
+
+        System.out.println("\nProjetos do usuario:");
+        System.out.println(user.printProjects());
+
+        user.editTask(task1.getId(), "Nova Tarefa 1", null, null, null, null);
+        System.out.println("\nTarefas do usuario apos edicao:");
+        System.out.println(user.printTasks());
+
+        user.removeProjectById(task2.getId());
+
+        System.out.println("\nTareafas do usuario apos remocao:");
+        System.out.println(user.printTasks());
+    }
 }
