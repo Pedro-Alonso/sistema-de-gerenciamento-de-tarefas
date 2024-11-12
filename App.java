@@ -74,7 +74,7 @@ public class App {
     task3.addTag(tag3);
 
     SubTask subTask1 = new SubTask(
-      user.getId(),
+      user,
       "Subtarefa 1",
       "Descrição da subtarefa 1",
       LocalDate.now().plusDays(3),
