@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
-import java.util.function.Function;
 
 public class Task {
 
@@ -474,35 +473,15 @@ public class Task {
     return comments.size();
   }
 
-  /**
-   * Method to get all elements of a given ArrayList<T> and return a String with their names, using the equivalent getName() method of the T class
-   * @param array The ArrayList<> of given class T to be used -> {@link ArrayList}
-   * @param getNameFunc Equivalent function of getName() on T class -> {@link Function}
-   *
-   * @return {@link String}
-   * Example: getListString(tasks, Task::getName);
-   */
-  private <T> String getListString(
-    ArrayList<T> array,
-    Function<T, String> getNameFunc
-  ) {
-    if (array == null || array.isEmpty()) return "N/A";
 
-    StringBuilder returnString = new StringBuilder();
-    array.forEach(t -> {
-      returnString.append(getNameFunc.apply(t)).append(", ");
-    });
-
-    return returnString.substring(0, returnString.length() - 2);
-  }
 
   /**
    * Method that returns a String with all the information about the current Task object, except for the id
    * @return {@link String}
    */
   public String printTask() {
-    String tagNames = getListString(tags, Tag::getDescription);
-    String subTaskNames = getListString(subTasks, SubTask::getName);
+    String tagNames = Utils.getListString(tags, Tag::getDescription);
+    String subTaskNames = Utils.getListString(subTasks, SubTask::getName);
 
     String currentStatus = "";
     switch (status) {
