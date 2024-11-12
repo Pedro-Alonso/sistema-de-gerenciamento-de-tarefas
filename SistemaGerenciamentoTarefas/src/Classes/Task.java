@@ -85,6 +85,7 @@ public class Task {
         "O nome da tarefa não pode ser vazio"
       );
       this.name = name;
+      this.updatedAt = LocalDateTime.now();
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
     }
@@ -108,6 +109,7 @@ public class Task {
         "A descrição da tarefa não pode ser vazia"
       );
       this.description = description;
+      this.updatedAt = LocalDateTime.now();
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
     }
@@ -133,6 +135,7 @@ public class Task {
         "A data limite da tarefa não pode ser anterior a data atual"
       );
       this.deadline = deadline;
+      this.updatedAt = LocalDateTime.now();
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
     }
@@ -156,6 +159,7 @@ public class Task {
         "A prioridade da tarefa não pode ser negativa"
       );
       this.priority = priority;
+      this.updatedAt = LocalDateTime.now();
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
     }
@@ -179,6 +183,7 @@ public class Task {
         "O status da tarefa não pode ser nulo"
       );
       this.status = status;
+      this.updatedAt = LocalDateTime.now();
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
     }
@@ -206,8 +211,11 @@ public class Task {
   public void addTag(Tag tag) {
     try {
       Tag t = getTagById(tag.getId());
-      if (t == null) tags.add(tag);
-      return;
+      if (t == null) {
+        tags.add(tag);
+        this.updatedAt = LocalDateTime.now();
+        return;
+      }
     } catch (Exception e) {
       System.out.println("Erro ao adicionar a tag: " + e.getMessage());
     }
@@ -250,8 +258,11 @@ public class Task {
   public boolean removeTag(UUID id) {
     try {
       int tagIndex = getTagIndex(id);
-      if (tagIndex == -1) throw new IllegalArgumentException("Etiqueta não encontrada");
+      if (tagIndex == -1) throw new IllegalArgumentException(
+        "Etiqueta não encontrada"
+      );
       tags.remove(tagIndex);
+      this.updatedAt = LocalDateTime.now();
       return true;
     } catch (Exception e) {
       System.out.println("Erro ao remover a etiqueta: " + e.getMessage());
@@ -266,9 +277,14 @@ public class Task {
    */
   public void addSubTask(SubTask subTask) {
     try {
-      if (this instanceof SubTask) throw new IllegalArgumentException("Não é possível adicionar uma Sub-tarefa a outra Sub-tarefa");
+      if (this instanceof SubTask) throw new IllegalArgumentException(
+        "Não é possível adicionar uma Sub-tarefa a outra Sub-tarefa"
+      );
       SubTask st = getSubTaskById(subTask.getId());
-      if (st == null) subTasks.add(subTask);
+      if (st == null) {
+        subTasks.add(subTask);
+        this.updatedAt = LocalDateTime.now();
+      }
       return;
     } catch (Exception e) {
       System.out.println("Erro ao adicionar a sub tarefa: " + e.getMessage());
@@ -314,6 +330,7 @@ public class Task {
       int subTaskIndex = getSubTaskIndex(id);
       if (subTaskIndex == -1) return false;
       subTasks.remove(subTaskIndex);
+      this.updatedAt = LocalDateTime.now();
       return true;
     } catch (Exception e) {
       System.out.println("Erro ao remover a sub tarefa: " + e.getMessage());
@@ -329,6 +346,7 @@ public class Task {
   public void addComment(TaskComment comment) {
     try {
       comments.add(comment);
+      this.updatedAt = LocalDateTime.now();
       return;
     } catch (Exception e) {
       System.out.println("Erro ao adicionar o comentário: " + e.getMessage());
@@ -374,6 +392,7 @@ public class Task {
       int commentIndex = getCommentIndex(id);
       if (commentIndex == -1) return false;
       comments.remove(commentIndex);
+      this.updatedAt = LocalDateTime.now();
       return true;
     } catch (Exception e) {
       System.out.println("Erro ao remover o comentário: " + e.getMessage());
@@ -439,6 +458,8 @@ public class Task {
       Etiquetas: %s
       Sub tarefas: %s
       Número de comentários: %s
+      Criado em: %s
+      Atualizado em: %s
       """,
       name,
       description,
@@ -447,7 +468,9 @@ public class Task {
       currentStatus,
       tagNames,
       subTaskNames,
-      getCommentsCount()
+      getCommentsCount(),
+      createdAt,
+      updatedAt
     );
   }
 
@@ -456,6 +479,7 @@ public class Task {
    */
   public void incrementPriority() {
     this.priority += 1;
+    this.updatedAt = LocalDateTime.now();
   }
 
   /**
@@ -463,5 +487,20 @@ public class Task {
    */
   public void decrementPriority() {
     this.priority -= 1;
+    this.updatedAt = LocalDateTime.now();
+  }
+
+  /**
+   * @return the createdAt as a {@link LocalDateTime}
+   */
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  /**
+   * @return the updatedAt as a {@link LocalDateTime}
+   */
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
   }
 }
