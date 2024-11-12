@@ -13,6 +13,9 @@ public class Task {
   private String name;
   private String description;
   private LocalDate deadline;
+  private int gravity;
+  private int urgency;
+  private int trend;
   private int priority;
   private TaskStatus status;
   private ArrayList<Tag> tags;
@@ -33,20 +36,29 @@ public class Task {
    * @param name The name of the Task -> {@link String}
    * @param description The description of the Task -> {@link String}
    * @param deadline The deadline of the Task -> {@link LocalDate}
-   * @param priority The priority of the Task -> {@code int}
+   * @param gravity The gravity of the Task -> {@code int}
+   * @param urgency The urgency of the Task -> {@code int}
+   * @param trend The trend of the Task -> {@code int}
+   * 
+   * @throws IllegalArgumentException if the gravity, urgency or trend are less than 1
    */
   public Task(
     UserTask user,
     String name,
     String description,
     LocalDate deadline,
-    int priority
+    int gravity,
+    int urgency,
+    int trend
   ) {
+    if (gravity < 1 || urgency < 1 || trend < 1) throw new IllegalArgumentException(
+      "Os valores de gravidade, urgência e tendência não podem ser menores que 1"
+    );
     this.user = user;
     this.name = name;
     this.description = description;
     this.deadline = deadline;
-    this.priority = priority;
+    this.priority = gravity * urgency * trend;
     this.status = TaskStatus.TODO;
     this.tags = new ArrayList<Tag>();
     this.subTasks = new ArrayList<SubTask>();
@@ -149,16 +161,71 @@ public class Task {
   }
 
   /**
-   * Setter for the priority of the Task
-   * @param priority The new priority for the Task -> {@code int}
-   * @throws IllegalArgumentException if the priority is negative
+   * {@return the gravity of the Task as a {@code int}}
    */
-  public void setPriority(int priority) {
+  public int getGravity() {
+    return gravity;
+  }
+
+  /**
+   * Setter for the gravity of the Task
+   * @param gravity The new gravity for the Task -> {@code int}
+   * @throws IllegalArgumentException if the gravity is less than 1
+   */
+  public void setGravity(int gravity) {
     try {
-      if (priority < 0) throw new IllegalArgumentException(
+      if (gravity < 1) throw new IllegalArgumentException(
         "A prioridade da tarefa não pode ser negativa"
       );
-      this.priority = priority;
+      this.gravity = gravity;
+      this.updatedAt = LocalDateTime.now();
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+    }
+  }
+
+  /**
+   * {@return the urgency of the Task as a {@code int}}
+   */
+  public int getUrgency() {
+    return urgency;
+  }
+
+  /**
+   * Setter for the urgency of the Task
+   * @param urgency The new urgency for the Task -> {@code int}
+   * @throws IllegalArgumentException if the urgency is less than 1
+   */
+  public void setUrgency(int urgency) {
+    try {
+      if (urgency < 1) throw new IllegalArgumentException(
+        "A prioridade da tarefa não pode ser negativa"
+      );
+      this.urgency = urgency;
+      this.updatedAt = LocalDateTime.now();
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+    }
+  }
+
+  /**
+   * {@return the trend of the Task as a {@code int}}
+   */
+  public int getTrend() {
+    return trend;
+  }
+
+  /**
+   * Setter for the trend of the Task
+   * @param trend The new trend for the Task -> {@code int}
+   * @throws IllegalArgumentException if the trend is less than 1
+   */
+  public void setTrend(int trend) {
+    try {
+      if (trend < 1) throw new IllegalArgumentException(
+        "A prioridade da tarefa não pode ser negativa"
+      );
+      this.trend = trend;
       this.updatedAt = LocalDateTime.now();
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
@@ -453,6 +520,9 @@ public class Task {
       Nome: %s
       Descrição: %s
       Prazo: %s
+      Gravidade: %s
+      Urgência: %s
+      Tendência: %s
       Prioridade: %s
       TaskStatus: %s
       Etiquetas: %s
@@ -464,6 +534,9 @@ public class Task {
       name,
       description,
       deadline,
+      gravity,
+      urgency,
+      trend,
       priority,
       currentStatus,
       tagNames,
@@ -472,22 +545,6 @@ public class Task {
       createdAt,
       updatedAt
     );
-  }
-
-  /**
-   * Method to increment (by one) the priority of the current Task object
-   */
-  public void incrementPriority() {
-    this.priority += 1;
-    this.updatedAt = LocalDateTime.now();
-  }
-
-  /**
-   * Method to decrement (by one) the priority of the current Task object
-   */
-  public void decrementPriority() {
-    this.priority -= 1;
-    this.updatedAt = LocalDateTime.now();
   }
 
   /**
