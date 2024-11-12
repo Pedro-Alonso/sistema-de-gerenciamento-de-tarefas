@@ -1,9 +1,9 @@
 package SistemaGerenciamentoTarefas.src.Classes.login;
 
 import SistemaGerenciamentoTarefas.src.Classes.user.User;
-import SistemaGerenciamentoTarefas.src.Classes.user.UserRepository;
-
+import SistemaGerenciamentoTarefas.src.Classes.login.UserDatabase;
 import java.util.List;
+import java.util.UUID;
 
 public class LoginController {
     private final LoginService loginService;
@@ -23,14 +23,12 @@ public class LoginController {
     }
 
     public static void main(String[] args) {
-        UserRepository userRepository = new UserRepository();
         LoginService loginService = new LoginService();
         LoginController loginController = new LoginController(loginService);
+        UserDatabase userDatabase = UserDatabase.getInstance();
 
         User newUser = new User("usuarioTeste", "usuario@teste.com", "senhaTeste");
-        List<User> users = userRepository.loadUsers();
-        users.add(newUser);
-        userRepository.saveUsers(users);
+        userDatabase.addUser(newUser);
         System.out.println("Novo usuario adicionado: " + newUser);
 
         System.out.println("\nTestando login com credenciais corretas:");
@@ -39,13 +37,26 @@ public class LoginController {
         System.out.println("\nTestando login com credenciais incorreta:");
         loginController.logIn("usuarioErrado", "senhaErrada");
 
-        if (userRepository.updateUser(newUser.getUserId(), "novoUsuario", "novo@teste.com", "novaSenha")) {
-            System.out.println("\nUsuario atualizado: " + newUser.getUserId());
+        User existingUser = userDatabase.getUsers().get(0);
+
+        if (userDatabase.updateUser(existingUser.getUserId(), "newUsername", "newEmail@example.com", "newPassword")) {
+            System.out.println("Usuario atalizado com sucesso,");
         } else {
-            System.out.println("\nUsuario nao encontrado.");
+            System.out.println("Usuario nao encontrado.");
+        }
+        System.out.println("\nUsuario apos atualizacao: " + existingUser + "\n");
+
+        System.out.println("Usuarios apos atualizacao:");
+        System.out.println(userDatabase.toString());
+
+        if (userDatabase.removeUser(existingUser.getUserId())) {
+            System.out.println("Usuario removido com sucesso.");
+        } else {
+            System.out.println("Usuario nao foi removido.");
         }
 
-        users = userRepository.loadUsers();
-        System.out.println("Usuarios apos atualizacao: " + users);
+        System.out.println("Usuarios apos remocao:");
+        System.out.println(userDatabase.toString());
+
     }
 }
