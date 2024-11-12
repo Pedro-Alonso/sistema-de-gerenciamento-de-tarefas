@@ -11,9 +11,7 @@ public class App {
     UserTask user = new UserTask(
       "Testador da Silva",
       "testador@email.com",
-      "testando123",
-      new ArrayList<>(),
-      new ArrayList<>()
+      "testando123"
     );
     System.out.println(user.printUser() + "\n");
 
@@ -43,21 +41,21 @@ public class App {
       "===== Adicionando tarefas, etiquetas e subtarefas ====="
     );
     Task task1 = new Task(
-      user.getId(),
+      user,
       "Tarefa 1",
       "Descrição da tarefa 1",
       LocalDate.now().plusDays(3),
       1
     );
     Task task2 = new Task(
-      user.getId(),
+      user,
       "Tarefa 2",
       "Descrição da tarefa 2",
       LocalDate.now().plusDays(5),
       2
     );
     Task task3 = new Task(
-      user.getId(),
+      user,
       "Tarefa 3",
       "Descrição da tarefa 3",
       LocalDate.now().plusDays(7),
