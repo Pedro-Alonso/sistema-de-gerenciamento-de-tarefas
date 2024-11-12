@@ -3,25 +3,36 @@ package SistemaGerenciamentoTarefas.src.Classes;
 import java.time.LocalDateTime;
 
 public class LoggerRecord {
-    private UserTask editor;    
+    private Object editor;    
     private LocalDateTime createdAt;
     
     private String subject;
     private String message;
 
     public LoggerRecord(UserTask editor, String subject, String message) {
-        this.editor = editor;
+        setEditor(editor);
         setCreatedAt();
         this.subject = subject;
         this.message = message;
     }
 
-    public UserTask getEditor() {
+    public LoggerRecord(String subject, String message) {
+        setEditor("SISTEMA");
+        setCreatedAt();
+        this.subject = subject;
+        this.message = message;
+    }
+
+    public Object getEditor() {
         return editor;
     }
 
-    public void setEditor(UserTask editor) {
-        this.editor = editor;
+    private void setEditor(Object editor) {
+        if (editor instanceof UserTask || editor instanceof String) {
+            this.editor = editor;
+        } else {
+            throw new IllegalArgumentException("Editor deve ser do tipo UserTask ou String.");
+        }
     }
 
     public LocalDateTime getCreatedAt() {
