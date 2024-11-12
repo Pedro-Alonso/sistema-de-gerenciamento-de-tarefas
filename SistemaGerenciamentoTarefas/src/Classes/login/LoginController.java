@@ -7,11 +7,13 @@ public class LoginController {
         this.loginService = loginService;
     }
 
-    public void LogIn(String usernameOrEmail, String password) {
+    public boolean LogIn(String usernameOrEmail, String password) {
         if (loginService.authenticate(usernameOrEmail, password)) {
             System.out.println("Login bem-sucedido!");
+            return true;
         } else {
             System.out.println("Nome de usuario ou senha incorretos.");
+            return false;
         }
     }
 }
