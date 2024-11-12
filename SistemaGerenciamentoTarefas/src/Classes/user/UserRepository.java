@@ -1,23 +1,38 @@
 package SistemaGerenciamentoTarefas.src.Classes.user;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+
+import java.io.*;
 import java.lang.reflect.Type;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class UserRepository {
     private static final String FILE_PATH = "users.json";
-    private final Gson gson = new Gson();
+    private final Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
 
     public List<User> loadUsers() {
-        try (FileReader reader = new FileReader((FILE_PATH))) {
+       File file = new File(FILE_PATH);
+
+       if (!file.exists() || file.length() == 0) {
+           System.out.println("No data found or file is empty. Returning an empty list.");
+           return new ArrayList<>();
+       }
+
+        try (FileReader reader = new FileReader(file)) {
             Type userListType = new TypeToken<ArrayList<User>>(){}.getType();
             return gson.fromJson(reader, userListType);
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found. Returning an empty list.");
+            return new ArrayList<>();
+        } catch (EOFException | JsonSyntaxException e) {
+            System.out.println("File is empty or improperly formatted. Returning an empty list.");
+            return new ArrayList<>();
         } catch (IOException e) {
             e.printStackTrace();
             return new ArrayList<>();
@@ -46,5 +61,27 @@ public class UserRepository {
             }
         }
         return false;
+    }
+
+    public static void main(String[] args) {
+        UserRepository  userRepository = new UserRepository();
+
+        List<User> users = userRepository.loadUsers();
+
+        System.out.println("Loaded users: " + users);
+
+        User newUser = new User("name", "email", "senha");
+        users.add(newUser);
+        userRepository.saveUsers(users);
+        System.out.println("Added new user: " + newUser);
+
+        if (userRepository.updateUser(newUser.getUserId(), "newName", "newEmail", "newSenha")) {
+            System.out.println("Updated user: " + newUser.getUserId());
+        } else {
+            System.out.println("User not found.");
+        }
+
+        users = userRepository.loadUsers();
+        System.out.println("Users after update: " + users);
     }
 }
