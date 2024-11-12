@@ -1,13 +1,14 @@
 package SistemaGerenciamentoTarefas.src.Classes;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.function.Function;
 
 public class Task {
 
-  private UUID id;
+  private final UUID id = UUID.randomUUID();
   private UserTask user;
   private String name;
   private String description;
@@ -17,6 +18,8 @@ public class Task {
   private ArrayList<Tag> tags;
   private ArrayList<SubTask> subTasks;
   private ArrayList<TaskComment> comments;
+  private final LocalDateTime createdAt = LocalDateTime.now();
+  private LocalDateTime updatedAt = LocalDateTime.now();
 
   public enum TaskStatus {
     TODO,
@@ -39,7 +42,6 @@ public class Task {
     LocalDate deadline,
     int priority
   ) {
-    this.id = UUID.randomUUID();
     this.user = user;
     this.name = name;
     this.description = description;
