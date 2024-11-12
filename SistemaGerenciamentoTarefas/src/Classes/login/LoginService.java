@@ -1,19 +1,20 @@
 package SistemaGerenciamentoTarefas.src.Classes.login;
 
 import java.util.List;
+
 import SistemaGerenciamentoTarefas.src.Classes.user.User;
-import SistemaGerenciamentoTarefas.src.Classes.user.UserRepository;
+import SistemaGerenciamentoTarefas.src.Classes.login.UserDatabase;
 
 
 public class LoginService {
-    private final UserRepository userRepository;
+    private final UserDatabase userDatabase;
 
     public LoginService() {
-        this.userRepository = new UserRepository();
+        this.userDatabase = UserDatabase.getInstance();
     }
 
     public boolean authenticate(String usernameOrEmail, String password) {
-        List<User> users = userRepository.loadUsers();
+        List<User> users = userDatabase.getUsers();
             return users.stream()
                     .anyMatch(u
                             -> u.getUsername().equals(usernameOrEmail)
@@ -22,8 +23,6 @@ public class LoginService {
     }
 
     public void newUser(User newUser) {
-        List<User> users = userRepository.loadUsers();
-        users.add(newUser);
-        userRepository.saveUsers(users);
+        userDatabase.addUser(newUser);
     }
 }
