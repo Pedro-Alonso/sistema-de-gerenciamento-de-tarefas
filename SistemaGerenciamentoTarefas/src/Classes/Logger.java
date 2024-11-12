@@ -1,35 +1,36 @@
 package SistemaGerenciamentoTarefas.src.Classes;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Logger {
-    private static Logger uniqueInstance;
-    private ArrayList<String> logEntries;
-    
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss z");
+    private static Logger singleInstance;
+    private ArrayList<LoggerRecord> logs;
 
     private Logger() {
-        logEntries = new ArrayList<>();
+        logs = new ArrayList<>();
     }
 
     public static synchronized Logger getInstance() {
-        if (uniqueInstance == null) {
-            uniqueInstance = new Logger();
+        if (singleInstance == null) {
+            singleInstance = new Logger();
         }
-        return uniqueInstance;
+        return singleInstance;
     }
 
-    public void createLogEntry(String message) {
-        ZonedDateTime dateTime = ZonedDateTime.now();
-        String formattedDate = dateTime.format(formatter);
-        String logMessage = formattedDate + ": " + message;
-        logEntries.add(logMessage);
+    public void publish (LoggerRecord log) {
+        logs.add(log);
     }
 
-    public ArrayList<String> getLogs() {
-        return logEntries;
+    public void flush () {
+        logs.clear();
+    }
+
+    public ArrayList<LoggerRecord> getLogs() {
+        return logs;
+    }
+
+    public void setLogs(ArrayList<LoggerRecord> logs) {
+        this.logs = logs;
     }
 
 }
