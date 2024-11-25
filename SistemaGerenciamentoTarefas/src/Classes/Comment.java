@@ -128,6 +128,13 @@ public class Comment {
     }
 
     /**
+     * {@return the list of topics as an {@link ArrayList} of {@link String}}
+     */
+    public ArrayList<String> getTopics() {
+        return topics;
+    }
+
+    /**
      * {@return the id of the comment as a {@link UUID}}
      */
     public UUID getId() {
