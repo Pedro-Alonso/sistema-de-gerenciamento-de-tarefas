@@ -9,6 +9,12 @@ public class LoginController {
         this.loginService = loginService;
     }
 
+    /**
+     * Logs in a user based on username or email and password.
+     * @param usernameOrEmail the username or email of the user
+     * @param password the password of the user
+     * @return true if login is successful, false otherwise
+     */
     public boolean logIn(String usernameOrEmail, String password) {
         if (loginService.authenticate(usernameOrEmail, password)) {
             System.out.println("Login bem-sucedido!");
