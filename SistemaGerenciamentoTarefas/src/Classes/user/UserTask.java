@@ -51,7 +51,7 @@ public class UserTask extends User{
      * @return {@code boolean} | {@code true} if it was removed, {@code false} otherwise
      * @throws Exception if an error occurs while removing the Task
      */
-    private boolean removeTaskById(UUID taskId) {
+    public boolean removeTaskById(UUID taskId) {
         try {
             //removes the task from taskMap and gets the task;
             Task task = taskMap.remove(taskId);
@@ -66,45 +66,102 @@ public class UserTask extends User{
             return false;
         }
     }
-
     /**
-     * Method to edit a task from tasks, null param will be ignored
+     * Method to edit the name of a task from tasks
      * @param taskId The ID of the Task that will be edited -> {@link UUID}
      * @param newName The new name of the Task -> {@link String}
+     * @return {@code boolean} | {@code true} if it was edited, {@code false} otherwise
+     */
+    public boolean editTaskName(UUID taskId, String newName) {
+        Task task = taskMap.get(taskId);
+        if (task == null || newName == null || newName.trim().isEmpty()) return false;
+
+        task.setName(newName);
+        return true;
+    }
+
+    /**
+     * Method to edit the description of a task from tasks
+     * @param taskId The ID of the Task that will be edited -> {@link UUID}
      * @param newDescription The new description of the Task -> {@link String}
+     * @return {@code boolean} | {@code true} if it was edited, {@code false} otherwise
+     */
+    public boolean editTaskDescription(UUID taskId, String newDescription) {
+        Task task = taskMap.get(taskId);
+        if (task == null || newDescription == null) return false;
+
+        task.setDescription(newDescription);
+        return true;
+    }
+
+    /**
+     * Method to edit the deadline of a task from tasks
+     * @param taskId The ID of the Task that will be edited -> {@link UUID}
      * @param newDeadLine The new deadline of the Task -> {@link LocalDate}
-     * @param newPriority The new priority of the Task -> {@link Integer}
+     * @return {@code boolean} | {@code true} if it was edited, {@code false} otherwise
+     */
+    public boolean editTaskDeadline(UUID taskId, LocalDate newDeadLine) {
+        Task task = taskMap.get(taskId);
+        if (task == null || newDeadLine == null) return false;
+
+        task.setDeadline(newDeadLine);
+        return true;
+    }
+
+    /**
+     * Method to edit the gravity of a task from tasks
+     * @param taskId The ID of the Task that will be edited -> {@link UUID}
+     * @param newGravity The new gravity of the Task -> {@link Integer}
+     * @return {@code boolean} | {@code true} if it was edited, {@code false} otherwise
+     */
+    public boolean editTaskGravity(UUID taskId, Integer newGravity) {
+        Task task = taskMap.get(taskId);
+        if (task == null || newGravity == null) return false;
+
+        task.setGravity(newGravity);
+        return true;
+    }
+
+    /**
+     * Method to edit the urgency of a task from tasks
+     * @param taskId The ID of the Task that will be edited -> {@link UUID}
+     * @param newUrgency The new urgency of the Task -> {@link Integer}
+     * @return {@code boolean} | {@code true} if it was edited, {@code false} otherwise
+     */
+    public boolean editTaskUrgency(UUID taskId, Integer newUrgency) {
+        Task task = taskMap.get(taskId);
+        if (task == null || newUrgency == null) return false;
+
+        task.setUrgency(newUrgency);
+        return true;
+    }
+
+    /**
+     * Method to edit the trend of a task from tasks
+     * @param taskId The ID of the Task that will be edited -> {@link UUID}
+     * @param newTrend The new trend of the Task -> {@link Integer}
+     * @return {@code boolean} | {@code true} if it was edited, {@code false} otherwise
+     */
+    public boolean editTaskTrend(UUID taskId, Integer newTrend) {
+        Task task = taskMap.get(taskId);
+        if (task == null || newTrend == null) return false;
+
+        task.setTrend(newTrend);
+        return true;
+    }
+
+    /**
+     * Method to edit the status of a task from tasks
+     * @param taskId The ID of the Task that will be edited -> {@link UUID}
      * @param newStatus The new status of the Task -> {@link SistemaGerenciamentoTarefas.src.Classes.Task.TaskStatus}
      * @return {@code boolean} | {@code true} if it was edited, {@code false} otherwise
      */
-    public boolean editTask(UUID taskId, String newName, String newDescription, LocalDate newDeadLine, Integer newPriority, Task.TaskStatus newStatus) {
+    public boolean editTaskStatus(UUID taskId, Task.TaskStatus newStatus) {
         Task task = taskMap.get(taskId);
-        if (task == null) return false;
+        if (task == null || newStatus == null) return false;
 
-        boolean updated = false;
-
-        if (newName != null && !newName.trim().isEmpty()) {
-            task.setName(newName);
-            updated = true;
-        }
-        if (newDescription != null) {
-            task.setDescription(newDescription);
-            updated = true;
-        }
-        if (newDeadLine != null) {
-            task.setDeadline(newDeadLine);
-            updated = true;
-        }
-        if (newPriority != null) {
-            task.setPriority(newPriority);
-            updated = true;
-        }
-        if (newStatus != null) {
-            task.setStatus(newStatus);
-            updated = true;
-        }
-
-        return updated;
+        task.setStatus(newStatus);
+        return true;
     }
 
     /**
@@ -219,52 +276,88 @@ public class UserTask extends User{
             return true;
     }
 
-    /**
-     * Method to edit a Task from a Project, null param will be ignored
-     * @param taskId The ID of the Task that will be edited -> {@link UUID}
-     * @param projectId The ID of the Project that the task is in -> {@link UUID}
-     * @param newName The new name of the Task -> {@link String}
-     * @param newDescription The new description of the Task -> {@link String}
-     * @param newDeadLine The new deadline of the Task -> {@link LocalDate}
-     * @param newPriority The new priority of the Task -> {@link Integer}
-     * @param newStatus The new status of the Task -> {@link SistemaGerenciamentoTarefas.src.Classes.Task.TaskStatus}
-     * @return {@code boolean} | {@code true} if it was edited, {@code false} otherwise
-     */
-    public boolean editTaskInProject(UUID projectId, UUID taskId, String newName, String newDescription, LocalDate newDeadLine, Integer newPriority, Task.TaskStatus newStatus) {
+    public boolean editTaskNameInProject(UUID projectId, UUID taskId, String newName) {
         Project project = projectMap.get(projectId);
-
         if (project == null) return false;
 
         int taskIndex = project.getTaskIndexById(taskId);
-
-        if (taskIndex == -1) return false;
-
         Task task = project.getTasks().get(taskIndex);
+        if (task == null || newName == null || newName.trim().isEmpty()) return false;
 
-        boolean updated = false;
+        task.setName(newName);
+        return true;
+    }
 
-        if (newName != null && !newName.trim().isEmpty()) {
-            task.setName(newName);
-            updated = true;
-        }
-        if (newDescription != null) {
-            task.setDescription(newDescription);
-            updated = true;
-        }
-        if (newDeadLine != null) {
-            task.setDeadline(newDeadLine);
-            updated = true;
-        }
-        if (newPriority != null) {
-            task.setPriority(newPriority);
-            updated = true;
-        }
-        if (newStatus != null) {
-            task.setStatus(newStatus);
-            updated = true;
-        }
+    public boolean editTaskDescriptionInProject(UUID projectId, UUID taskId, String newDescription) {
+        Project project = projectMap.get(projectId);
+        if (project == null) return false;
 
-        return updated;
+        int taskIndex = project.getTaskIndexById(taskId);
+        Task task = project.getTasks().get(taskIndex);
+        if (task == null || newDescription == null) return false;
+
+        task.setDescription(newDescription);
+        return true;
+    }
+
+    public boolean editTaskDeadlineInProject(UUID projectId, UUID taskId, LocalDate newDeadline) {
+        Project project = projectMap.get(projectId);
+        if (project == null) return false;
+
+        int taskIndex = project.getTaskIndexById(taskId);
+        Task task = project.getTasks().get(taskIndex);
+        if (task == null || newDeadline == null) return false;
+
+        task.setDeadline(newDeadline);
+        return true;
+    }
+
+    public boolean editTaskGravityInProject(UUID projectId, UUID taskId, Integer newGravity) {
+        Project project = projectMap.get(projectId);
+        if (project == null) return false;
+
+        int taskIndex = project.getTaskIndexById(taskId);
+        Task task = project.getTasks().get(taskIndex);
+        if (task == null || newGravity == null) return false;
+
+        task.setGravity(newGravity);
+        return true;
+    }
+
+    public boolean editTaskUrgencyInProject(UUID projectId, UUID taskId, Integer newUrgency) {
+        Project project = projectMap.get(projectId);
+        if (project == null) return false;
+
+        int taskIndex = project.getTaskIndexById(taskId);
+        Task task = project.getTasks().get(taskIndex);
+        if (task == null || newUrgency == null) return false;
+
+        task.setUrgency(newUrgency);
+        return true;
+    }
+
+    public boolean editTaskTrendInProject(UUID projectId, UUID taskId, Integer newTrend) {
+        Project project = projectMap.get(projectId);
+        if (project == null) return false;
+
+        int taskIndex = project.getTaskIndexById(taskId);
+        Task task = project.getTasks().get(taskIndex);
+        if (task == null || newTrend == null) return false;
+
+        task.setTrend(newTrend);
+        return true;
+    }
+
+    public boolean editTaskStatusInProject(UUID projectId, UUID taskId, Task.TaskStatus newStatus) {
+        Project project = projectMap.get(projectId);
+        if (project == null) return false;
+
+        int taskIndex = project.getTaskIndexById(taskId);
+        Task task = project.getTasks().get(taskIndex);
+        if (task == null || newStatus == null) return false;
+
+        task.setStatus(newStatus);
+        return true;
     }
 
     /**
@@ -317,7 +410,7 @@ public class UserTask extends User{
      * @param id The id of the Task to be searched -> {@link UUID}
      * @return {@code int} | {@code -1} if not exists
      */
-    private int getTaskIndex(UUID id) {
+    public int getTaskIndex(UUID id) {
         for (int i = 0; i < tasks.size(); i++) {
             if (tasks.get(i).getId() == id) {
                 return i;
@@ -359,33 +452,33 @@ public class UserTask extends User{
     public void setProjects(ArrayList<Project> projects) { this.projects = projects; }
 
 
-    public static void main(String[] args) {
-        UserTask user = new UserTask("nome", "email@teste.com", "senha");
-        Task task1 = new Task(user.getUserId(), "Tarefa 1", "Descricao", LocalDate.of(2024, 12, 1), 1);
-        Task task2 = new Task(user.getUserId(), "Tarefa 2", "Descricao", LocalDate.of(2024, 12, 1), 2);
+    // public static void main(String[] args) {
+    //     UserTask user = new UserTask("nome", "email@teste.com", "senha");
+    //     Task task1 = new Task(user.getUserId(), "Tarefa 1", "Descricao", LocalDate.of(2024, 12, 1), 1);
+    //     Task task2 = new Task(user.getUserId(), "Tarefa 2", "Descricao", LocalDate.of(2024, 12, 1), 2);
 
-        user.addTask(task1);
-        user.addTask(task2);
+    //     user.addTask(task1);
+    //     user.addTask(task2);
 
-        System.out.println("Tarefas do usuario:");
-        System.out.println(user.printTasks());
+    //     System.out.println("Tarefas do usuario:");
+    //     System.out.println(user.printTasks());
 
-        Project project = new Project(LocalDate.of(2024, 12, 1), LocalDate.of(2024, 12, 2), "Projeto");
+    //     Project project = new Project(LocalDate.of(2024, 12, 1), LocalDate.of(2024, 12, 2), "Projeto");
 
-        user.addProject(project);
+    //     user.addProject(project);
 
-        user.addTaskToProject(project.getId(), task1);
+    //     user.addTaskToProject(project.getId(), task1);
 
-        System.out.println("\nProjetos do usuario:");
-        System.out.println(user.printProjects());
+    //     System.out.println("\nProjetos do usuario:");
+    //     System.out.println(user.printProjects());
 
-        user.editTask(task1.getId(), "Nova Tarefa 1", null, null, null, null);
-        System.out.println("\nTarefas do usuario apos edicao:");
-        System.out.println(user.printTasks());
+    //     user.editTask(task1.getId(), "Nova Tarefa 1", null, null, null, null);
+    //     System.out.println("\nTarefas do usuario apos edicao:");
+    //     System.out.println(user.printTasks());
 
-        user.removeProjectById(task2.getId());
+    //     user.removeProjectById(task2.getId());
 
-        System.out.println("\nTareafas do usuario apos remocao:");
-        System.out.println(user.printTasks());
-    }
+    //     System.out.println("\nTareafas do usuario apos remocao:");
+    //     System.out.println(user.printTasks());
+    // }
 }
