@@ -2,6 +2,8 @@ package Classes;
 
 import java.time.LocalDateTime;
 
+import Classes.user.UserTask;
+
 /**
  * Class representing a log record in the task management system.
  */
@@ -105,7 +107,7 @@ public class LoggerRecord {
      */
     private String getEditorName() {
         if (editor instanceof UserTask) {
-            return ((UserTask) editor).getUserName();
+            return ((UserTask) editor).getUsername();
         } else {
             return (String) editor;
         }
@@ -116,7 +118,7 @@ public class LoggerRecord {
      */
     private String getSubjectName() {
         if (subject instanceof UserTask) {
-            return ((UserTask) subject).getUserName();
+            return ((UserTask) subject).getUsername();
         } else if (subject instanceof Task) {
             return ((Task) subject).getName();
         } else if (subject instanceof Project) {

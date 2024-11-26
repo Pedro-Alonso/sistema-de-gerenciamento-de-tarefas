@@ -1,13 +1,10 @@
 
 package Classes.Controller;
 
-import java.util.ArrayList;
 import java.util.Observable;
 
-import Classes.Project;
-import Classes.Task;
-import Classes.User;
-import Classes.UserTask;
+import Classes.user.User;
+import Classes.user.UserTask;
 import Classes.DTO.LoggerRecordDto;
 
 @SuppressWarnings("deprecation")
@@ -35,10 +32,8 @@ public class UserController extends Observable {
      * @param password The password of the user -> {@link String}
      * @return The created user -> {@link User}
      */
-    public User createUser(String name, String email, String password) {
-        ArrayList<Task> tasks = new ArrayList<Task>();
-        ArrayList<Project> projects = new ArrayList<Project>();
-        UserTask user = new UserTask(name, email, password, tasks, projects);
+    public UserTask createUser(String name, String email, String password) {
+        UserTask user = new UserTask(name, email, password);
         LoggerRecordDto log = new LoggerRecordDto(user, user, "User created.");
         setChanged();
         notifyObservers(log);
@@ -51,8 +46,8 @@ public class UserController extends Observable {
      * @param name The new name for the user -> {@link String}
      */
     public void updateUserName(UserTask user, String name) {
-        String oldName = user.getUserName();
-        user.setUserName(name);
+        String oldName = user.getUsername();
+        user.setUsername(name);
         LoggerRecordDto log = new LoggerRecordDto(user, user, "User name updated from '" + oldName + "' to '" + name + "'.");
         setChanged();
         notifyObservers(log);
@@ -64,8 +59,8 @@ public class UserController extends Observable {
      * @param email The new email for the user -> {@link String}
      */
     public void updateUserEmail(UserTask user, String email) {
-        String oldEmail = user.getEmail();
-        user.setEmail(email);
+        String oldEmail = user.getUserEmail();
+        user.setUserEmail(email);
         LoggerRecordDto log = new LoggerRecordDto(user, user, "User email updated from '" + oldEmail + "' to '" + email + "'.");
         setChanged();
         notifyObservers(log);
@@ -77,7 +72,7 @@ public class UserController extends Observable {
      * @param password The new password for the user -> {@link String}
      */
     public void updateUserPassword(UserTask user, String password) {
-        user.setPassword(password);
+        user.setUserPassword(password);
         LoggerRecordDto log = new LoggerRecordDto(user, user, "User password updated.");
         setChanged();
         notifyObservers(log);

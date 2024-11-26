@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.UUID;
 
+import Classes.user.UserTask;
+
 @SuppressWarnings("deprecation")
 public class Task extends Observable{
 

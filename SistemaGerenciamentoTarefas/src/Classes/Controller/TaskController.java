@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 import Classes.Project;
 import Classes.Task;
-import Classes.UserTask;
+import Classes.user.UserTask;
 import Classes.DTO.LoggerRecordDto;
 
 @SuppressWarnings("deprecation")

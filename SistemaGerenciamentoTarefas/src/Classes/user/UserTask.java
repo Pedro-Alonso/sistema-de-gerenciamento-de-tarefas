@@ -1,18 +1,26 @@
-package Classes;
+package Classes.user;
 
+
+import Classes.Project;
+import Classes.Task;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class UserTask extends User{
     private ArrayList<Task> tasks;
     private ArrayList<Project> projects;
+    private HashMap<UUID, Task> taskMap;
+    private HashMap<UUID, Project> projectMap;
 
-    public UserTask(String userName, String email, String password, ArrayList<Task> tasks, ArrayList<Project> projects) {
+    public UserTask(String userName, String email, String password) {
         super(userName, email, password);
-        this.tasks = tasks;
-        this.projects = projects;
+        this.tasks = new ArrayList<>();
+        this.projects = new ArrayList<>();
+        this.taskMap = new HashMap<>();
+        this.projectMap = new HashMap<>();
     }
 
     /**
@@ -23,17 +31,16 @@ public class UserTask extends User{
      */
     public boolean addTask(Task newTask) {
         try {
-            // Get the Task by its ID
-            Task checker = getTaskById(newTask.getId());
-            // Checks if the Task already exists
-            if (checker != null) return false; // Task already exists
+            // Checks if the newTask already exists
+            if (taskMap.containsKey(newTask.getId())) return false;
 
             // Add the task to tasks
             tasks.add(newTask);
+            taskMap.put(newTask.getId(), newTask);
             return true;
         } catch (Exception e) {
             //Handle any unexpected exceptions
-            System.out.println("Erro ao remover a tarefa do array: " + e.getMessage());
+            System.out.println("Erro ao adicionar tarefa: " + e.getMessage());
             return false;
         }
     }
@@ -46,61 +53,16 @@ public class UserTask extends User{
      */
     private boolean removeTaskById(UUID taskId) {
         try {
-            // Get the index of the Task by its ID
-            int index = getTaskIndex(taskId);
-            if (index == -1) return false; // Task not found
+            //removes the task from taskMap and gets the task;
+            Task task = taskMap.remove(taskId);
+            if (task == null) return false;
 
             // Remove the task from tasks
-            tasks.remove(index);
+            tasks.remove(task);
             return true;
         } catch (Exception e) {
             //Handle any unexpected exceptions
             System.out.println("Erro ao remover a tarefa do array: " + e.getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * Method to add a Project to projects
-     * @param newProject The Project that will be added -> {@link Project}
-     * @return {@code boolean} | {@code true} if it was added, {@code false} otherwise
-     * @throws Exception if an error occurs while adding the Project
-     */
-    public boolean addProject(Project newProject) {
-        try {
-            // Get the Project by its ID
-            Project checker = getProjectById(newProject.getId());
-            // Checks if the Project already exists
-            if (checker != null) return false; // Project already exists
-
-            // Add the Project to projects
-            projects.add(newProject);
-            return true;
-        } catch (Exception e) {
-            //Handle any unexpected exceptions
-            System.out.println("Erro ao remover o projeto do array: " + e.getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * Method to remove a Project from projects by its ID
-     * @param projectId The ID of the Project that will be removed -> {@link UUID}
-     * @return {@code boolean} | {@code true} if it was removed, {@code false} otherwise
-     * @throws Exception if an error occurs while removing the Project
-     */
-    public boolean removeProject(UUID projectId) {
-        try {
-            // Get the index of the Project by its ID
-            int index = getProjectIndex(projectId);
-            if (index == -1) return false; // Project not found
-
-            // Remove the Project from projects
-            projects.remove(index);
-            return true;
-        } catch (Exception e) {
-            //Handle any unexpected exceptions
-            System.out.println("Erro ao remover o projeto do array: " + e.getMessage());
             return false;
         }
     }
@@ -116,12 +78,12 @@ public class UserTask extends User{
      * @return {@code boolean} | {@code true} if it was edited, {@code false} otherwise
      */
     public boolean editTask(UUID taskId, String newName, String newDescription, LocalDate newDeadLine, Integer newPriority, Task.TaskStatus newStatus) {
-        Task task = getTaskById(taskId);
+        Task task = taskMap.get(taskId);
         if (task == null) return false;
 
         boolean updated = false;
 
-        if (newName != null) {
+        if (newName != null && !newName.trim().isEmpty()) {
             task.setName(newName);
             updated = true;
         }
@@ -134,7 +96,7 @@ public class UserTask extends User{
             updated = true;
         }
         if (newPriority != null) {
-            task.setUrgency(newPriority);
+            task.setPriority(newPriority);
             updated = true;
         }
         if (newStatus != null) {
@@ -146,6 +108,49 @@ public class UserTask extends User{
     }
 
     /**
+     * Method to add a Project to projects
+     * @param newProject The Project that will be added -> {@link Project}
+     * @return {@code boolean} | {@code true} if it was added, {@code false} otherwise
+     * @throws Exception if an error occurs while adding the Project
+     */
+    public boolean addProject(Project newProject) {
+        try {
+            // Checks if the Project already exists
+            if (projectMap.containsKey(newProject.getId())) return false;
+
+            // Add the Project to projects
+            projects.add(newProject);
+            projectMap.put(newProject.getId(), newProject);
+            return true;
+        } catch (Exception e) {
+            //Handle any unexpected exceptions
+            System.out.println("Erro ao remover o projeto do array: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Method to remove a Project from projects by its ID
+     * @param projectId The ID of the Project that will be removed -> {@link UUID}
+     * @return {@code boolean} | {@code true} if it was removed, {@code false} otherwise
+     * @throws Exception if an error occurs while removing the Project
+     */
+    public boolean removeProjectById(UUID projectId) {
+        try {
+            Project project = projectMap.remove(projectId);
+            if (project == null) return false;
+
+            // Remove the Project from projects
+            projects.remove(project);
+            return true;
+        } catch (Exception e) {
+            //Handle any unexpected exceptions
+            System.out.println("Erro ao remover o projeto do array: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Method to edit a Project from projects, null param will be ignored
      * @param projectId The ID of the Project that will be edited -> {@link UUID}
      * @param newName The new name of the Project -> {@link String}
@@ -154,11 +159,15 @@ public class UserTask extends User{
      * @return {@code boolean} | {@code true} if it was edited, {@code false} otherwise
      */
     public boolean editProject(UUID projectId, LocalDate newBeginDate, LocalDate newLimitDate, String newName) {
-        Project project = getProjectById(projectId);
+        Project project = projectMap.get(projectId);
         if (project == null) return false;
 
         boolean updated = false;
 
+        if (newName != null && !newName.trim().isEmpty()) {
+            project.setName(newName);
+            updated = true;
+        }
         if (newBeginDate != null) {
             project.setBeginDate(newBeginDate);
             updated = true;
@@ -167,11 +176,47 @@ public class UserTask extends User{
             project.setLimitDate(newLimitDate);
             updated = true;
         }
-        if (newName != null) {
-            project.setName(newName);
-            updated = true;
-        }
         return updated;
+    }
+
+    /**
+     * Method to assign a Task to a Project
+     * @param projectId The ID of the Project that the task will be added to -> {@link UUID}
+     * @param newTask The Task that will be added -> {@link Task}
+     * @return {@code boolean} | {@code true} if it was removed, {@code false} otherwise
+     */
+    public boolean addTaskToProject(UUID projectId, Task newTask) {
+            // Get the project by its ID
+            Project project = projectMap.get(projectId);
+            if (project == null) return false; // Project not found
+
+            // Check if the task already exists in the project
+            if (project.getTaskIndexById(newTask.getId()) != -1) return false; // Task already exists
+            // Add the task from the project
+            project.addTask(newTask);
+            return true;
+    }
+
+    /**
+     * Method to remove a Task from a Project by its ID
+     * @param projectId The ID of the Project that the task will be removed -> {@link UUID}
+     * @param taskID The ID of the Task will be removed -> {@link UUID}
+     * @private int getTaskIndex(UUID id) {
+        return taskMap.get(id);
+    }return {@code boolean} | {@code true} if it was removed, {@code false} otherwise
+     * @throws Exception if an error occurs while removing the Task
+     */
+    public boolean removeTaskFromProject(UUID projectId, UUID taskID) {
+            // Get the index of the project by its ID
+            Project project = projectMap.get(projectId);
+            if (project == null) return false; // Project not found
+
+            // Check if the task exists in the project
+            if (project.getTaskIndexById(taskID) == -1) return false; // Task not found
+
+            // Remove the task from the project
+            project.removeTask(taskID);
+            return true;
     }
 
     /**
@@ -186,7 +231,7 @@ public class UserTask extends User{
      * @return {@code boolean} | {@code true} if it was edited, {@code false} otherwise
      */
     public boolean editTaskInProject(UUID projectId, UUID taskId, String newName, String newDescription, LocalDate newDeadLine, Integer newPriority, Task.TaskStatus newStatus) {
-        Project project = getProjectById(projectId);
+        Project project = projectMap.get(projectId);
 
         if (project == null) return false;
 
@@ -198,7 +243,7 @@ public class UserTask extends User{
 
         boolean updated = false;
 
-        if (newName != null) {
+        if (newName != null && !newName.trim().isEmpty()) {
             task.setName(newName);
             updated = true;
         }
@@ -211,7 +256,7 @@ public class UserTask extends User{
             updated = true;
         }
         if (newPriority != null) {
-            task.setUrgency(newPriority);
+            task.setPriority(newPriority);
             updated = true;
         }
         if (newStatus != null) {
@@ -223,69 +268,13 @@ public class UserTask extends User{
     }
 
     /**
-     * Method to add a Task to a Project
-     * @param projectId The ID of the Project that the task will be added -> {@link UUID}
-     * @param newTask The Task that will be added -> {@link Task}
-     * @return {@code boolean} | {@code true} if it was added, {@code false} otherwise
-     * @throws Exception if an error occurs while adding the Task
-     */
-    public boolean addTaskToProject(UUID projectId, Task newTask) {
-        try {
-            // Get the project by its ID
-            Project project = getProjectById(projectId);
-            if (project == null) return false; // Project not found
-
-            // Check if the task already exists in the project
-            if (project.getTaskIndexById(newTask.getId()) != -1) return false; // Task already exists
-            // Add the task from the project
-            project.addTask(newTask);
-            return true;
-        } catch (Exception e) {
-            //Handle any unexpected exceptions
-            System.out.println("Erro ao adicionar a tarefa do projeto: " + e.getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * Method to remove a Task from a Project by its ID
-     * @param projectId The ID of the Project that the task will be removed -> {@link UUID}
-     * @param taskID The ID of the Task will be removed -> {@link UUID}
-     * @return {@code boolean} | {@code true} if it was removed, {@code false} otherwise
-     * @throws Exception if an error occurs while removing the Task
-     */
-    public boolean removeTaskFromProject(UUID projectId, UUID taskID) {
-        try {
-            // Get the index of the project by its ID
-            int index = getProjectIndex(projectId);
-            if (index == -1) return false; // Project not found
-
-            // Get the project
-            Project project = projects.get(index);
-
-            // Check if the task exists in the project
-            if (project.getTaskIndexById(taskID) == -1) return false; // Task not found
-
-            // Remove the task from the project
-            project.removeTask(taskID);
-            return true;
-        } catch (Exception e) {
-            //Handle any unexpected exceptions
-            System.out.println("Erro ao remover a tarefa do projeto: " + e.getMessage());
-            return false;
-        }
-    }
-
-    /**
      * Method that returns a String with all the information about all the tasks of the User
      * @return {@link String}
      */
     public String printTasks() {
-        StringBuilder s = new StringBuilder();
-        for (Task task : tasks) {
-            s.append(task.printTask()).append("\n");
-        }
-        return s.toString();
+        StringBuilder sb = new StringBuilder();
+        tasks.forEach(task -> sb.append(task.printTask()).append("\n"));
+        return sb.toString();
     }
 
     /**
@@ -293,26 +282,35 @@ public class UserTask extends User{
      * @return {@link String}
      */
     public String printProjects() {
-        StringBuilder s = new StringBuilder();
-        for (Project project : projects) {
-            s.append(project.toString()).append("\n");
-        }
-        return s.toString();
+        StringBuilder sb = new StringBuilder();
+        projects.forEach(project -> sb.append(project.toString()).append("\n"));
+        return sb.toString();
     }
 
     //getters & setters
 
     /**
-     * Method to get the specific Task on this User tasks
-     * @param id The id of the Tasks to be searched -> {@link UUID}
-     * @return {@code Task} | {@code null} if not exists
+     * {@return the Task using its ID {@link Task}}
      */
-    private Task getTaskById(UUID id) {
-        for (Task task : tasks) {
-            if (task.getId() == id) return task;
-        }
-        return null;
+    public Task getTaskById(UUID id) {
+        return taskMap.get(id);
     }
+
+    /**
+     * {@return the Project using its ID {@link Project}}
+     */
+    public Project getProjectById(UUID id) {
+        return projectMap.get(id);
+    }
+
+    /**
+     * {@return the number of tasks of the UserTask as a {@link int}}
+     */
+    public int getTaskNumber() {return tasks.size(); }
+    /**
+     * {@return the number of projects of the UserTask as a {@link int}}
+     */
+    public int getProjectNumber() {return projects.size(); }
 
     /**
      * Method to get the index of a specific Task on this User tasks
@@ -326,18 +324,6 @@ public class UserTask extends User{
             }
         }
         return -1;
-    }
-
-    /**
-     * Method to get the specific Project on this User projects
-     * @param id The id of the Project to be searched -> {@link UUID}
-     * @return {@code Project} | {@code null} if not exists
-     */
-    public Project getProjectById(UUID id) {
-        for (Project project : projects) {
-            if (project.getId().equals(id)) return project;
-        }
-        return null;
     }
 
     /**
@@ -371,13 +357,35 @@ public class UserTask extends User{
      * @param projects The new array of projects for the User -> {@link ArrayList<Project>}
      */
     public void setProjects(ArrayList<Project> projects) { this.projects = projects; }
-    /**
-     * {@return the number of tasks of the UserTask as a {@link int}}
-     */
-    public int getTaskNumber() {return tasks.size(); }
-    /**
-     * {@return the number of projects of the UserTask as a {@link int}}
-     */
-    public int getProjectNumber() {return projects.size(); }
 
+
+    public static void main(String[] args) {
+        UserTask user = new UserTask("nome", "email@teste.com", "senha");
+        Task task1 = new Task(user.getUserId(), "Tarefa 1", "Descricao", LocalDate.of(2024, 12, 1), 1);
+        Task task2 = new Task(user.getUserId(), "Tarefa 2", "Descricao", LocalDate.of(2024, 12, 1), 2);
+
+        user.addTask(task1);
+        user.addTask(task2);
+
+        System.out.println("Tarefas do usuario:");
+        System.out.println(user.printTasks());
+
+        Project project = new Project(LocalDate.of(2024, 12, 1), LocalDate.of(2024, 12, 2), "Projeto");
+
+        user.addProject(project);
+
+        user.addTaskToProject(project.getId(), task1);
+
+        System.out.println("\nProjetos do usuario:");
+        System.out.println(user.printProjects());
+
+        user.editTask(task1.getId(), "Nova Tarefa 1", null, null, null, null);
+        System.out.println("\nTarefas do usuario apos edicao:");
+        System.out.println(user.printTasks());
+
+        user.removeProjectById(task2.getId());
+
+        System.out.println("\nTareafas do usuario apos remocao:");
+        System.out.println(user.printTasks());
+    }
 }

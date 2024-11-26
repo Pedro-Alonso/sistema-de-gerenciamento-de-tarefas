@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import Classes.user.UserTask;
+
 /**
  * Class representing a Project in the task management system.
  */

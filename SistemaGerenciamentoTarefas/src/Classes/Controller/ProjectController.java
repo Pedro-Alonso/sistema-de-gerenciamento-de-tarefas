@@ -5,8 +5,8 @@ import java.time.LocalDate;
 
 import Classes.Project;
 import Classes.Task;
-import Classes.UserTask;
 import Classes.DTO.LoggerRecordDto;
+import Classes.user.UserTask;
 
 @SuppressWarnings("deprecation")
 public class ProjectController extends Observable {

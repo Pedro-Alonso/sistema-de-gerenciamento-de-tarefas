@@ -4,7 +4,7 @@ import java.util.Observable;
 import java.util.UUID;
 
 import Classes.TaskComment;
-import Classes.UserTask;
+import Classes.user.UserTask;
 import Classes.DTO.LoggerRecordDto;
 
 @SuppressWarnings("deprecation")

@@ -3,6 +3,8 @@ package Classes;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import Classes.user.UserTask;
+
 public class SubTask extends Task {
     /*
     * @author Abigail

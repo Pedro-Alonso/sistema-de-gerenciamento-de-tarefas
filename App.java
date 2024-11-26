@@ -3,7 +3,7 @@ import Classes.Controller.TaskController;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-
+/*
 public class App {
 
   @SuppressWarnings("deprecation")
@@ -214,3 +214,4 @@ public class App {
     // }
   }
 }
+*/

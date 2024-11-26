@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import Classes.user.UserTask;
+
 public class Comment {
     private final UUID id = UUID.randomUUID();
     private UserTask author;
