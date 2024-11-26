@@ -1,4 +1,4 @@
-package SistemaGerenciamentoTarefas.src.Classes;
+package Classes;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

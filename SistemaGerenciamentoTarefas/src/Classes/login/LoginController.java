@@ -1,7 +1,7 @@
-package SistemaGerenciamentoTarefas.src.Classes.login;
+package Classes.login;
 
-import SistemaGerenciamentoTarefas.src.Classes.user.User;
-import SistemaGerenciamentoTarefas.src.Classes.login.UserDatabase;
+import Classes.user.User;
+import Classes.login.UserDatabase;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,7 +39,7 @@ public class LoginController {
 
         User existingUser = userDatabase.getUsers().get(0);
 
-        if (userDatabase.updateUser(existingUser.getUserId(), "newUsername", "newEmail@example.com", "newPassword")) {
+        if (userDatabase.updateUser(existingUser.getId(), "newUsername", "newEmail@example.com", "newPassword")) {
             System.out.println("Usuario atalizado com sucesso,");
         } else {
             System.out.println("Usuario nao encontrado.");
@@ -49,7 +49,7 @@ public class LoginController {
         System.out.println("Usuarios apos atualizacao:");
         System.out.println(userDatabase.toString());
 
-        if (userDatabase.removeUser(existingUser.getUserId())) {
+        if (userDatabase.removeUser(existingUser.getId())) {
             System.out.println("Usuario removido com sucesso.");
         } else {
             System.out.println("Usuario nao foi removido.");

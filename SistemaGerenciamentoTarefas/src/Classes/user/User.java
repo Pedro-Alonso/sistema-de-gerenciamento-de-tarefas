@@ -1,4 +1,4 @@
-package SistemaGerenciamentoTarefas.src.Classes.user;
+package Classes.user;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -11,7 +11,7 @@ public class User {
     private String username;
     private final UUID id;
     private String email;
-    private String password; // For now the password is not secure, but it will eventually;
+    private String password;
     private final LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -68,7 +68,7 @@ public class User {
                 Atualizado em: %s
                 """,
                 getUsername(),
-                getUserId(),
+                getId(),
                 getUserEmail(),
                 getUserPassword(),
                 formatDate(getCreatedAt(), "dd/MM/yyyy HH:mm:ss"),
@@ -87,7 +87,7 @@ public class User {
     /**
      * {@return the id of the User as a {@link UUID}}
      */
-    public UUID getUserId() {
+    public UUID getId() {
         return id;
     }
 

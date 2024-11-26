@@ -1,9 +1,9 @@
-package SistemaGerenciamentoTarefas.src.Classes.login;
+package Classes.login;
 
 import java.util.List;
 
-import SistemaGerenciamentoTarefas.src.Classes.user.User;
-import SistemaGerenciamentoTarefas.src.Classes.login.UserDatabase;
+import Classes.user.User;
+import Classes.login.UserDatabase;
 
 
 public class LoginService {

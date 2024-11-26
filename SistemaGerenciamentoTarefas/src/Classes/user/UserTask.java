@@ -1,8 +1,8 @@
-package SistemaGerenciamentoTarefas.src.Classes.user;
+package Classes.user;
 
 
-import SistemaGerenciamentoTarefas.src.Classes.Project;
-import SistemaGerenciamentoTarefas.src.Classes.Task;
+import Classes.Project;
+import Classes.Task;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -191,7 +191,7 @@ public class UserTask extends User{
             if (project == null) return false; // Project not found
 
             // Check if the task already exists in the project
-            if (project.searchTask(newTask.getId()) != -1) return false; // Task already exists
+            if (project.getTaskIndexById(newTask.getId()) != -1) return false; // Task already exists
             // Add the task from the project
             project.addTask(newTask);
             return true;
@@ -212,7 +212,7 @@ public class UserTask extends User{
             if (project == null) return false; // Project not found
 
             // Check if the task exists in the project
-            if (project.searchTask(taskID) == -1) return false; // Task not found
+            if (project.getTaskIndexById(taskID) == -1) return false; // Task not found
 
             // Remove the task from the project
             project.removeTask(taskID);
@@ -235,11 +235,11 @@ public class UserTask extends User{
 
         if (project == null) return false;
 
-        int taskIndex = project.searchTask(taskId);
+        int taskIndex = project.getTaskIndexById(taskId);
 
         if (taskIndex == -1) return false;
 
-        Task task = project.getTaskArray().get(taskIndex);
+        Task task = project.getTasks().get(taskIndex);
 
         boolean updated = false;
 

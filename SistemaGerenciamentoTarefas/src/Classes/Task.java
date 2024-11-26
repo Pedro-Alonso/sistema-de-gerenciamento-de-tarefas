@@ -1,11 +1,15 @@
-package SistemaGerenciamentoTarefas.src.Classes;
+package Classes;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.UUID;
 
-public class Task {
+import Classes.user.UserTask;
+
+@SuppressWarnings("deprecation")
+public class Task extends Observable{
 
   private final UUID id = UUID.randomUUID();
   private UserTask user;
@@ -90,13 +94,14 @@ public class Task {
    * @param name The new name for the Task -> {@link String}
    * @throws IllegalArgumentException if the name is blank
    */
-  public void setName(String name) {
+public void setName(String name) {
     try {
       if (name.isBlank()) throw new IllegalArgumentException(
         "O nome da tarefa não pode ser vazio"
       );
       this.name = name;
       this.updatedAt = LocalDateTime.now();
+      notifyObservers();
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
     }
@@ -121,6 +126,7 @@ public class Task {
       );
       this.description = description;
       this.updatedAt = LocalDateTime.now();
+      notifyObservers();
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
     }
@@ -147,6 +153,7 @@ public class Task {
       );
       this.deadline = deadline;
       this.updatedAt = LocalDateTime.now();
+      notifyObservers();
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
     }
@@ -178,6 +185,7 @@ public class Task {
       );
       this.gravity = gravity;
       this.updatedAt = LocalDateTime.now();
+      notifyObservers();
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
     }
@@ -202,6 +210,7 @@ public class Task {
       );
       this.urgency = urgency;
       this.updatedAt = LocalDateTime.now();
+      notifyObservers();
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
     }
@@ -226,6 +235,7 @@ public class Task {
       );
       this.trend = trend;
       this.updatedAt = LocalDateTime.now();
+      notifyObservers();
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
     }
@@ -250,6 +260,7 @@ public class Task {
       );
       this.status = status;
       this.updatedAt = LocalDateTime.now();
+      notifyObservers();
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
     }
@@ -280,6 +291,7 @@ public class Task {
       if (t == null) {
         tags.add(tag);
         this.updatedAt = LocalDateTime.now();
+        notifyObservers();
         return;
       }
     } catch (Exception e) {
@@ -329,6 +341,7 @@ public class Task {
       );
       tags.remove(tagIndex);
       this.updatedAt = LocalDateTime.now();
+      notifyObservers();
       return true;
     } catch (Exception e) {
       System.out.println("Erro ao remover a etiqueta: " + e.getMessage());
@@ -350,6 +363,7 @@ public class Task {
       if (st == null) {
         subTasks.add(subTask);
         this.updatedAt = LocalDateTime.now();
+        notifyObservers();
       }
       return;
     } catch (Exception e) {
@@ -397,6 +411,7 @@ public class Task {
       if (subTaskIndex == -1) return false;
       subTasks.remove(subTaskIndex);
       this.updatedAt = LocalDateTime.now();
+      notifyObservers();
       return true;
     } catch (Exception e) {
       System.out.println("Erro ao remover a sub tarefa: " + e.getMessage());
@@ -413,6 +428,7 @@ public class Task {
     try {
       comments.add(comment);
       this.updatedAt = LocalDateTime.now();
+      notifyObservers();
       return;
     } catch (Exception e) {
       System.out.println("Erro ao adicionar o comentário: " + e.getMessage());
@@ -459,6 +475,7 @@ public class Task {
       if (commentIndex == -1) return false;
       comments.remove(commentIndex);
       this.updatedAt = LocalDateTime.now();
+      notifyObservers();
       return true;
     } catch (Exception e) {
       System.out.println("Erro ao remover o comentário: " + e.getMessage());
@@ -490,8 +507,10 @@ public class Task {
         break;
       case DOING:
         currentStatus = "Em andamento";
+        break;
       case DONE:
         currentStatus = "Concluído";
+        break;
     }
 
     return String.format(

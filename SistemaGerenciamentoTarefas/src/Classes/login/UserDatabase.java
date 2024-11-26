@@ -1,6 +1,6 @@
-package SistemaGerenciamentoTarefas.src.Classes.login;
+package Classes.login;
 
-import SistemaGerenciamentoTarefas.src.Classes.user.User;
+import Classes.user.User;
 
 import java.util.UUID;
 import java.util.Vector;
@@ -32,7 +32,7 @@ public class UserDatabase {
 
     public boolean updateUser(UUID id, String newUsername, String newEmail, String newPassword) {
         for (User user : users) {
-            if (user.getUserId().equals(id)) {
+            if (user.getId().equals(id)) {
                 if (newUsername != null) user.setUsername(newUsername);
                 if (newEmail != null) user.setUserEmail(newEmail);
                 if (newPassword != null) user.setUserPassword(newPassword);
@@ -56,7 +56,7 @@ public class UserDatabase {
     }
 
     public boolean removeUser(UUID id) {
-        return users.removeIf(user -> user.getUserId().equals(id));
+        return users.removeIf(user -> user.getId().equals(id));
     }
 
     public void clearUsers() {

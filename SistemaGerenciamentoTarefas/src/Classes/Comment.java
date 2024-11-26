@@ -1,8 +1,10 @@
-package SistemaGerenciamentoTarefas.src.Classes;
+package Classes;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
+
+import Classes.user.UserTask;
 
 public class Comment {
     private final UUID id = UUID.randomUUID();
@@ -128,6 +130,13 @@ public class Comment {
     }
 
     /**
+     * {@return the list of topics as an {@link ArrayList} of {@link String}}
+     */
+    public ArrayList<String> getTopics() {
+        return topics;
+    }
+
+    /**
      * {@return the id of the comment as a {@link UUID}}
      */
     public UUID getId() {
@@ -139,7 +148,8 @@ public class Comment {
      * @return {@link String} with the comment details
      */
     protected String displayComment() {
-        String topics = Utils.getListString(this.topics, String::toString);
+        Utils utils = new Utils();
+        String topics = utils.getListString(this.topics, String::toString);
         return String.format(
             """
             Autor: %s
