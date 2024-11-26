@@ -1,10 +1,10 @@
-package Classes;
+package Classes.Model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import Classes.user.UserTask;
+import Classes.Utils;
 
 public class Comment {
     private final UUID id = UUID.randomUUID();

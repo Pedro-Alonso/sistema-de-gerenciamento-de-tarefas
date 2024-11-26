@@ -2,9 +2,9 @@ package Classes.Controller;
 
 import java.util.Observable;
 
-import Classes.user.User;
-import Classes.user.UserTask;
 import Classes.DTO.LoggerRecordDto;
+import Classes.Model.User;
+import Classes.Model.UserTask;
 
 @SuppressWarnings("deprecation")
 public class UserController extends Observable {

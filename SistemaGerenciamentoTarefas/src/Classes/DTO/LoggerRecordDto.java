@@ -1,6 +1,6 @@
 package Classes.DTO;
 
-import Classes.user.UserTask;
+import Classes.Model.UserTask;
 
 public class LoggerRecordDto {
     private UserTask editor;

@@ -1,9 +1,9 @@
-package Classes.login;
-
-import Classes.user.User;
+package Classes.Persistency;
 
 import java.util.UUID;
 import java.util.Vector;
+
+import Classes.Model.User;
 
 public class UserDatabase {
 

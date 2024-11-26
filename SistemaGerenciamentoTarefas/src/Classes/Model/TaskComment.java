@@ -1,8 +1,6 @@
-package Classes;
+package Classes.Model;
 
 import java.util.UUID;
-
-import Classes.user.UserTask;
 
 public class TaskComment extends Comment {
     private UUID taskId;

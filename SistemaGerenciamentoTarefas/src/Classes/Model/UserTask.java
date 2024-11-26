@@ -1,8 +1,5 @@
-package Classes.user;
+package Classes.Model;
 
-
-import Classes.Project;
-import Classes.Task;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -153,7 +150,7 @@ public class UserTask extends User{
     /**
      * Method to edit the status of a task from tasks
      * @param taskId The ID of the Task that will be edited -> {@link UUID}
-     * @param newStatus The new status of the Task -> {@link SistemaGerenciamentoTarefas.src.Classes.Task.TaskStatus}
+     * @param newStatus The new status of the Task -> {@link Classes.Model.src.Classes.Task.TaskStatus}
      * @return {@code boolean} | {@code true} if it was edited, {@code false} otherwise
      */
     public boolean editTaskStatus(UUID taskId, Task.TaskStatus newStatus) {

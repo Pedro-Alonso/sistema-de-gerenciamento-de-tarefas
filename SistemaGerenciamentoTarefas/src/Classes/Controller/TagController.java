@@ -4,9 +4,9 @@ package Classes.Controller;
 import java.util.Observable;
 import java.util.UUID;
 
-import Classes.Tag;
-import Classes.user.UserTask;
 import Classes.DTO.LoggerRecordDto;
+import Classes.Model.Tag;
+import Classes.Model.UserTask;
 
 @SuppressWarnings("deprecation")
 public class TagController extends Observable {

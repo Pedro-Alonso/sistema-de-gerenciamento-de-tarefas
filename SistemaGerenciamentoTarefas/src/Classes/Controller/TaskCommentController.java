@@ -3,9 +3,9 @@ package Classes.Controller;
 import java.util.Observable;
 import java.util.UUID;
 
-import Classes.TaskComment;
-import Classes.user.UserTask;
 import Classes.DTO.LoggerRecordDto;
+import Classes.Model.TaskComment;
+import Classes.Model.UserTask;
 
 @SuppressWarnings("deprecation")
 public class TaskCommentController extends Observable {

@@ -1,6 +1,4 @@
-package Classes;
-
-import Classes.user.UserTask;
+package Classes.Model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

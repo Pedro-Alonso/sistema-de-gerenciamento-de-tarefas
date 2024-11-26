@@ -4,10 +4,10 @@ package Classes.Controller;
 import java.util.Observable;
 import java.time.LocalDate;
 
-import Classes.SubTask;
-import Classes.Task;
-import Classes.user.UserTask;
 import Classes.DTO.LoggerRecordDto;
+import Classes.Model.SubTask;
+import Classes.Model.Task;
+import Classes.Model.UserTask;
 
 @SuppressWarnings("deprecation")
 public class SubTaskController extends Observable {

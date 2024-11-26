@@ -1,8 +1,6 @@
-package Classes;
+package Classes.Model;
 
 import java.time.LocalDateTime;
-
-import Classes.user.UserTask;
 
 /**
  * Class representing a log record in the task management system.

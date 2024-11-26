@@ -1,8 +1,9 @@
-package Classes.login;
+package Classes.Service;
 
 import java.util.List;
 
-import Classes.user.User;
+import Classes.Model.User;
+import Classes.Persistency.UserDatabase;
 
 public class LoginService {
     private final UserDatabase userDatabase;

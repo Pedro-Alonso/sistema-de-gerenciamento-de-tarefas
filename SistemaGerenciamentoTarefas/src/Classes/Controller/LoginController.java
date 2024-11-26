@@ -1,6 +1,8 @@
-package Classes.login;
+package Classes.Controller;
 
-import Classes.user.User;
+import Classes.Model.User;
+import Classes.Persistency.UserDatabase;
+import Classes.Service.LoginService;
 
 public class LoginController {
     private final LoginService loginService;

@@ -1,4 +1,4 @@
-package Classes;
+package Classes.Model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.UUID;
 
-import Classes.user.UserTask;
+import Classes.Utils;
 
 @SuppressWarnings("deprecation")
 public class Task extends Observable{
