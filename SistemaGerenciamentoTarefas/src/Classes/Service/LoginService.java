@@ -3,6 +3,7 @@ package Classes.Service;
 import java.util.List;
 
 import Classes.Model.User;
+import Classes.Model.UserSession;
 import Classes.Persistency.UserDatabase;
 
 public class LoginService {
@@ -16,13 +17,17 @@ public class LoginService {
      * Authenticates a user based on username or email and password.
      * @param usernameOrEmail the username or email of the user
      * @param password the password of the user
-     * @return true if authentication is successful, false otherwise
+     * @return UserSession if authentication is successful, null otherwise
      */
-    public boolean authenticate(String usernameOrEmail, String password) {
+    public UserSession authenticate(String usernameOrEmail, String password) {
         List<User> users = userDatabase.getUsers();
-        return users.stream()
-                .anyMatch(u -> (u.getUsername().equals(usernameOrEmail) || u.getUserEmail().equals(usernameOrEmail))
-                        && u.getUserPassword().equals(password));
+        for (User user : users) {
+            if ((user.getUsername().equals(usernameOrEmail) || user.getUserEmail().equals(usernameOrEmail))
+                    && user.getUserPassword().equals(password)) {
+                return new UserSession(user);
+            }
+        }
+        return null;
     }
 
     /**

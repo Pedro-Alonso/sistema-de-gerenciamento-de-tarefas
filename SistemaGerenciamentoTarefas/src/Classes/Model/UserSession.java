@@ -6,14 +6,14 @@ import java.util.Base64;
 import java.util.UUID;
 
 public class UserSession {
-    private UserTask user;
+    private User user;
     private String token;
 
     /**
      * Constructor for the UserSession class.
      * @param user the user associated with the session
      */
-    public UserSession(UserTask user) {
+    public UserSession(User user) {
         this.user = user;
         this.token = generateToken(user.getId());
     }
@@ -53,7 +53,7 @@ public class UserSession {
      * Returns the user associated with the session.
      * @return the user if the session is active, null otherwise
      */
-    public UserTask getUser() {
+    public User getUser() {
         if (!getStatus()) {
             return null;
         }
