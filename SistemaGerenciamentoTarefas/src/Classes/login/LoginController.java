@@ -1,9 +1,6 @@
 package Classes.login;
 
 import Classes.user.User;
-import Classes.login.UserDatabase;
-import java.util.List;
-import java.util.UUID;
 
 public class LoginController {
     private final LoginService loginService;

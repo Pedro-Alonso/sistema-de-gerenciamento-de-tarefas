@@ -148,8 +148,7 @@ public class Comment {
      * @return {@link String} with the comment details
      */
     protected String displayComment() {
-        Utils utils = new Utils();
-        String topics = utils.getListString(this.topics, String::toString);
+        String topics = Utils.getListString(this.topics, String::toString);
         return String.format(
             """
             Autor: %s
