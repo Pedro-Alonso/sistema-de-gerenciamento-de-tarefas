@@ -6,7 +6,7 @@ import java.util.UUID;
 import java.util.Base64;
 import java.util.regex.Pattern;
 
-public class User {
+public abstract class User {
 
     private String username;
     private final UUID id;

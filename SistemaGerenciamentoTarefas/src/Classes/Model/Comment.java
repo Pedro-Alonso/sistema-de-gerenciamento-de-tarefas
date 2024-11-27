@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import Classes.Utils;
 
-public class Comment {
+public abstract class Comment {
     private final UUID id = UUID.randomUUID();
     private UserTask author;
     private String text;

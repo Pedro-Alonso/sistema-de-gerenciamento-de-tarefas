@@ -5,6 +5,7 @@ import java.util.Observable;
 import Classes.DTO.LoggerRecordDto;
 import Classes.Model.User;
 import Classes.Model.UserSession;
+import Classes.Model.UserTask;
 
 @SuppressWarnings("deprecation")
 public class UserController extends Observable {
@@ -32,7 +33,7 @@ public class UserController extends Observable {
      * @return The created user -> {@link User}
      */
     public User createUser(String name, String email, String password) {
-        User user = new User(name, email, password);
+        UserTask user = new UserTask(name, email, password);
         LoggerRecordDto log = new LoggerRecordDto(user, user, "User created.");
         setChanged();
         notifyObservers(log);
