@@ -13,11 +13,11 @@ public class LoggerRecord {
 
     /**
      * Constructor for the LoggerRecord class with an editor.
-     * @param editor The editor of the log record -> {@link UserTask}
+     * @param editor The editor of the log record -> {@link User}
      * @param subject The subject of the log record -> {@link Object}
      * @param message The message of the log record -> {@link String}
      */
-    public LoggerRecord(UserTask editor, Object subject, String message) {
+    public LoggerRecord(User editor, Object subject, String message) {
         setEditor(editor);
         setCreatedAt();
         this.subject = subject;
@@ -46,13 +46,13 @@ public class LoggerRecord {
     /**
      * Setter for the editor of the log record.
      * @param editor The new editor for the log record -> {@link Object}
-     * @throws IllegalArgumentException if the editor is not of type UserTask or String
+     * @throws IllegalArgumentException if the editor is not of type User or String
      */
     private void setEditor(Object editor) {
-        if (editor instanceof UserTask || editor instanceof String) {
+        if (editor instanceof User || editor instanceof String) {
             this.editor = editor;
         } else {
-            throw new IllegalArgumentException("Editor deve ser do tipo UserTask ou String.");
+            throw new IllegalArgumentException("Editor deve ser do tipo User ou String.");
         }
     }
 
@@ -104,8 +104,8 @@ public class LoggerRecord {
      * {@return the name of the editor of the log record as a {@link String}}
      */
     private String getEditorName() {
-        if (editor instanceof UserTask) {
-            return ((UserTask) editor).getUsername();
+        if (editor instanceof User) {
+            return ((User) editor).getUsername();
         } else {
             return (String) editor;
         }
@@ -115,8 +115,8 @@ public class LoggerRecord {
      * {@return the name of the subject of the log record as a {@link String}}
      */
     private String getSubjectName() {
-        if (subject instanceof UserTask) {
-            return ((UserTask) subject).getUsername();
+        if (subject instanceof User) {
+            return ((User) subject).getUsername();
         } else if (subject instanceof Task) {
             return ((Task) subject).getName();
         } else if (subject instanceof Project) {
@@ -130,8 +130,8 @@ public class LoggerRecord {
      * {@return the type of the subject of the log record as a {@link String}}
      */
     private String getSubjectType() {
-        if (subject instanceof UserTask) {
-            return "UserTask";
+        if (subject instanceof User) {
+            return "User";
         } else if (subject instanceof Task) {
             return "Task";
         } else if (subject instanceof Project) {

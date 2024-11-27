@@ -1,19 +1,19 @@
 package Classes.DTO;
 
-import Classes.Model.UserTask;
+import Classes.Model.User;
 
 public class LoggerRecordDto {
-    private UserTask editor;
+    private User editor;
     private Object subject;
     private String message;
 
-    public LoggerRecordDto(UserTask editor, Object subject, String message) {
+    public LoggerRecordDto(User editor, Object subject, String message) {
         this.editor = editor;
         this.subject = subject;
         this.message = message;
     }
 
-    public UserTask getEditor() {
+    public User getEditor() {
         return editor;
     }
 

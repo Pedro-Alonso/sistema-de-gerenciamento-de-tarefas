@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import Classes.DTO.LoggerRecordDto;
 import Classes.Model.Project;
 import Classes.Model.Task;
+import Classes.Model.UserSession;
 import Classes.Model.UserTask;
 
 @SuppressWarnings("deprecation")
@@ -31,12 +32,15 @@ public class ProjectController extends Observable {
      * @param beginDate The start date of the project -> {@link LocalDate}
      * @param limitDate The end date of the project -> {@link LocalDate}
      * @param name The name of the project -> {@link String}
-     * @param userTask The user creating the project -> {@link UserTask}
+     * @param userSession The session of the user creating the project -> {@link UserSession}
      * @return The created project -> {@link Project}
      */
-    public Project createProject(LocalDate beginDate, LocalDate limitDate, String name, UserTask userTask) {
+    public Project createProject(LocalDate beginDate, LocalDate limitDate, String name, UserSession userSession) {
+        if (!userSession.getStatus()) {
+            throw new IllegalStateException("User session is not active.");
+        }
         Project project = new Project(beginDate, limitDate, name);
-        LoggerRecordDto log = new LoggerRecordDto(userTask, project, "Project created.");
+        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), project, "Project created.");
         setChanged();
         notifyObservers(log);
         return project;
@@ -46,11 +50,14 @@ public class ProjectController extends Observable {
      * Method to add a task to a project.
      * @param project The project to add the task to -> {@link Project}
      * @param task The task to be added -> {@link Task}
-     * @param userTask The user adding the task -> {@link UserTask}
+     * @param userSession The session of the user adding the task -> {@link UserSession}
      */
-    public void addTaskToProject(Project project, Task task, UserTask userTask) {
+    public void addTaskToProject(Project project, Task task, UserSession userSession) {
+        if (!userSession.getStatus()) {
+            throw new IllegalStateException("User session is not active.");
+        }
         project.addTask(task);
-        LoggerRecordDto log = new LoggerRecordDto(userTask, task, "Task added to project.");
+        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), task, "Task added to project.");
         setChanged();
         notifyObservers(log);
     }
@@ -59,11 +66,14 @@ public class ProjectController extends Observable {
      * Method to remove a task from a project.
      * @param project The project to remove the task from -> {@link Project}
      * @param task The task to be removed -> {@link Task}
-     * @param userTask The user removing the task -> {@link UserTask}
+     * @param userSession The session of the user removing the task -> {@link UserSession}
      */
-    public void removeTaskFromProject(Project project, Task task, UserTask userTask) {
+    public void removeTaskFromProject(Project project, Task task, UserSession userSession) {
+        if (!userSession.getStatus()) {
+            throw new IllegalStateException("User session is not active.");
+        }
         project.removeTask(task.getId());
-        LoggerRecordDto log = new LoggerRecordDto(userTask, task, "Task removed from project.");
+        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), task, "Task removed from project.");
         setChanged();
         notifyObservers(log);
     }
@@ -71,12 +81,16 @@ public class ProjectController extends Observable {
     /**
      * Method to add a user to a project.
      * @param project The project to add the user to -> {@link Project}
-     * @param userTask The user to be added -> {@link UserTask}
-     * @param editor The user adding the user -> {@link UserTask}
+     * @param userSession The session of the user to be added -> {@link UserSession}
+     * @param editorSession The session of the user adding the user -> {@link UserSession}
      */
-    public void addUserToProject(Project project, UserTask userTask, UserTask editor) {
-        project.addUser(userTask);
-        LoggerRecordDto log = new LoggerRecordDto(editor, project, "User added to project.");
+    public void addUserToProject(Project project, UserSession userSession, UserSession editorSession) {
+        if (!editorSession.getStatus()) {
+            throw new IllegalStateException("Editor session is not active.");
+        }
+        UserTask user = (UserTask) (userSession.getUser());
+        project.addUser(user);
+        LoggerRecordDto log = new LoggerRecordDto(editorSession.getUser(), project, "User added to project.");
         setChanged();
         notifyObservers(log);
     }
@@ -84,12 +98,15 @@ public class ProjectController extends Observable {
     /**
      * Method to remove a user from a project.
      * @param project The project to remove the user from -> {@link Project}
-     * @param userTask The user to be removed -> {@link UserTask}
-     * @param editor The user removing the user -> {@link UserTask}
+     * @param userSession The session of the user to be removed -> {@link UserSession}
+     * @param editorSession The session of the user removing the user -> {@link UserSession}
      */
-    public void removeUserFromProject(Project project, UserTask userTask, UserTask editor) {
-        project.removeUser(userTask.getId());
-        LoggerRecordDto log = new LoggerRecordDto(editor, project, "User removed from project.");
+    public void removeUserFromProject(Project project, UserSession userSession, UserSession editorSession) {
+        if (!editorSession.getStatus()) {
+            throw new IllegalStateException("Editor session is not active.");
+        }
+        project.removeUser(userSession.getUser().getId());
+        LoggerRecordDto log = new LoggerRecordDto(editorSession.getUser(), project, "User removed from project.");
         setChanged();
         notifyObservers(log);
     }
@@ -98,12 +115,15 @@ public class ProjectController extends Observable {
      * Method to update the name of a project.
      * @param project The project to be updated -> {@link Project}
      * @param name The new name for the project -> {@link String}
-     * @param userTask The user updating the project name -> {@link UserTask}
+     * @param userSession The session of the user updating the project name -> {@link UserSession}
      */
-    public void updateProjectName(Project project, String name, UserTask userTask) {
+    public void updateProjectName(Project project, String name, UserSession userSession) {
+        if (!userSession.getStatus()) {
+            throw new IllegalStateException("User session is not active.");
+        }
         String oldName = project.getName();
         project.setName(name);
-        LoggerRecordDto log = new LoggerRecordDto(userTask, project, "Project name updated from '" + oldName + "' to '" + name + "'.");
+        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), project, "Project name updated from '" + oldName + "' to '" + name + "'.");
         setChanged();
         notifyObservers(log);
     }
@@ -112,12 +132,15 @@ public class ProjectController extends Observable {
      * Method to update the start date of a project.
      * @param project The project to be updated -> {@link Project}
      * @param beginDate The new start date for the project -> {@link LocalDate}
-     * @param userTask The user updating the project start date -> {@link UserTask}
+     * @param userSession The session of the user updating the project start date -> {@link UserSession}
      */
-    public void updateProjectBeginDate(Project project, LocalDate beginDate, UserTask userTask) {
+    public void updateProjectBeginDate(Project project, LocalDate beginDate, UserSession userSession) {
+        if (!userSession.getStatus()) {
+            throw new IllegalStateException("User session is not active.");
+        }
         LocalDate oldBeginDate = project.getBeginDate();
         project.setBeginDate(beginDate);
-        LoggerRecordDto log = new LoggerRecordDto(userTask, project, "Project begin date updated from '" + oldBeginDate + "' to '" + beginDate + "'.");
+        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), project, "Project begin date updated from '" + oldBeginDate + "' to '" + beginDate + "'.");
         setChanged();
         notifyObservers(log);
     }
@@ -126,12 +149,15 @@ public class ProjectController extends Observable {
      * Method to update the end date of a project.
      * @param project The project to be updated -> {@link Project}
      * @param limitDate The new end date for the project -> {@link LocalDate}
-     * @param userTask The user updating the project end date -> {@link UserTask}
+     * @param userSession The session of the user updating the project end date -> {@link UserSession}
      */
-    public void updateProjectLimitDate(Project project, LocalDate limitDate, UserTask userTask) {
+    public void updateProjectLimitDate(Project project, LocalDate limitDate, UserSession userSession) {
+        if (!userSession.getStatus()) {
+            throw new IllegalStateException("User session is not active.");
+        }
         LocalDate oldLimitDate = project.getLimitDate();
         project.setLimitDate(limitDate);
-        LoggerRecordDto log = new LoggerRecordDto(userTask, project, "Project limit date updated from '" + oldLimitDate + "' to '" + limitDate + "'.");
+        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), project, "Project limit date updated from '" + oldLimitDate + "' to '" + limitDate + "'.");
         setChanged();
         notifyObservers(log);
     }
