@@ -43,21 +43,15 @@ public class UserDatabase {
     }
 
     /**
-     * Updates the details of a user in the database.
-     * @param id the ID of the user to be updated
-     * @param newUsername the new username for the user
-     * @param newEmail the new email for the user
-     * @param newPassword the new password for the user
+     * Updates a user in the database by replacing the existing user with the new user.
+     * @param newUser the new user to replace the existing user
      * @return true if the user was updated, false otherwise
      */
-    public boolean updateUser(UUID id, String newUsername, String newEmail, String newPassword) {
-        for (User user : users) {
-            if (user.getId().equals(id)) {
-                if (newUsername != null) user.setUsername(newUsername);
-                if (newEmail != null) user.setUserEmail(newEmail);
-                if (newPassword != null) user.setUserPassword(newPassword);
-                return true;
-            }
+    public boolean updateUser(User newUser) {
+        UUID id = newUser.getId();
+        if (removeUser(id)) {
+            addUser(newUser);
+            return true;
         }
         return false;
     }
