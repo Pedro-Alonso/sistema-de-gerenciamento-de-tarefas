@@ -4,7 +4,7 @@ import java.util.List;
 
 import Classes.Model.User;
 import Classes.Model.UserSession;
-import Classes.Persistency.UserDatabase;
+import Classes.Repository.UserDatabase;
 
 public class LoginService {
     private final UserDatabase userDatabase;
