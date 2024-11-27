@@ -19,6 +19,19 @@ public class TaskComment extends Comment {
     }
 
     /**
+     * Constructor for the TaskComment class for DTO purposes
+     * 
+     * @param commentId The ID of the comment -> {@link UUID}
+     * @param text The text of the comment -> {@link String}
+     * @param authorId The ID of the author of the comment -> {@link UUID}
+     * @param taskId The ID of the task associated with this comment -> {@link UUID}
+     */
+    public TaskComment(UUID commentId, String text, UUID authorId, UUID taskId) {
+        super(commentId, text, authorId);
+        this.taskId = taskId;
+    }
+
+    /**
      * {@return the ID of the task associated with this comment as a {@link UUID}}
      */
     public UUID getTaskId() {

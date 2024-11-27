@@ -43,6 +43,20 @@ public class TaskDatabase {
     }
 
     /**
+     * Get a Task by its ID
+     * @param id the ID of the task to be returned {@link UUID}
+     * @return the task with the given ID, or null if no such task exists
+     */
+    public Task getTaskById(UUID id) {
+        for (Task task : tasks) {
+            if (task.getId().equals(id)) {
+                return task;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Updates a task in the database by replacing the existing task with the new task.
      * @param newTask the new task to replace the existing task
      * @return true if the task was updated, false otherwise

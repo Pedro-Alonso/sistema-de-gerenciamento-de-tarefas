@@ -7,7 +7,7 @@ import java.util.UUID;
 import Classes.Utils;
 
 public abstract class Comment {
-    private final UUID id = UUID.randomUUID();
+    private UUID id = UUID.randomUUID();
     private UserTask author;
     private String text;
     private ArrayList<String> topics;
@@ -23,6 +23,19 @@ public abstract class Comment {
      */
     public Comment(UserTask author, String text) {
         this.author = author;
+        this.text = text;
+        this.topics = new ArrayList<>();
+    }
+
+    /**
+     * Constructor for the Comment class for DTO purposes
+     * 
+     * @param commentId The ID of the comment -> {@link UUID}
+     * @param text The text of the comment -> {@link String}
+     * @param authorId The ID of the author of the comment -> {@link UUID}
+     */
+    public Comment(UUID commentId, String text, UUID authorId) {
+        this.id = commentId;
         this.text = text;
         this.topics = new ArrayList<>();
     }

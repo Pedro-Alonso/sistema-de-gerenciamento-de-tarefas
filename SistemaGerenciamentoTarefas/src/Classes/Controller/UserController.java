@@ -3,6 +3,8 @@ package Classes.Controller;
 import java.util.Observable;
 
 import Classes.DTO.LoggerRecordDto;
+import Classes.DTO.UserDto;
+import Classes.Mapper.UserMapper;
 import Classes.Model.User;
 import Classes.Model.UserSession;
 import Classes.Model.UserTask;
@@ -44,6 +46,18 @@ public class UserController extends Observable {
         setChanged();
         notifyObservers(log);
         return user;
+    }
+
+    /**
+     * Method to create a user DTO.
+     * @param name The name of the user -> {@link String}
+     * @param email The email of the user -> {@link String}
+     * @param password The password of the user -> {@link String}
+     * @return The created user DTO -> {@link UserDto}
+     */
+    public UserDto create(String name, String email, String password) {
+        User user = createUser(name, email, password);
+        return UserMapper.toDto(user);
     }
 
     /**

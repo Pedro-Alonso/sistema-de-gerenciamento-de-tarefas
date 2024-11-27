@@ -26,6 +26,20 @@ public class Tag {
         this.projectId = projectId;
         this.id = UUID.randomUUID();
     }
+
+    /**
+     * Constructor for the Tag class for DTO purposes
+     * Initializes the description, projectId and id attributes
+     *
+     * @param id The ID of the tag -> {@link UUID}
+     * @param description The description of the tag -> {@link String}
+     * @param projectId The ID of the project associated with this tag -> {@link UUID}
+     */
+    public Tag(UUID id, String description, UUID projectId) {
+        this.id = id;
+        this.description = description;
+        this.projectId = projectId;
+    }
     
     /**
      * {@return the project ID associated with this tag as a {@link UUID}}

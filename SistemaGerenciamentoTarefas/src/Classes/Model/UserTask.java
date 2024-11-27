@@ -20,6 +20,14 @@ public class UserTask extends User{
         this.projectMap = new HashMap<>();
     }
 
+    public UserTask(UUID id, String userName, String email){
+        super(id, userName, email);
+        this.tasks = new ArrayList<>();
+        this.projects = new ArrayList<>();
+        this.taskMap = new HashMap<>();
+        this.projectMap = new HashMap<>();
+    }
+
     /**
      * Method to add a Task to tasks
      * @param newTask The Task that will be added -> {@link Task}

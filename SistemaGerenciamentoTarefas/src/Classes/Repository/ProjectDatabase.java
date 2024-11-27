@@ -42,6 +42,20 @@ public class ProjectDatabase {
     }
 
     /**
+     * Returns a project from the database by ID.
+     * @param id the ID of the project to be returned
+     * @return the project with the specified ID, or null if no project is found
+     */
+    public Project getProjectById(UUID id) {
+        for (Project project : projects) {
+            if (project.getId().equals(id)) {
+                return project;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Updates a project in the database by replacing the existing project with the new project.
      * @param newProject the new project to replace the existing project
      * @return true if the project was updated, false otherwise

@@ -3,6 +3,8 @@ package Classes.Controller;
 import java.util.Observable;
 
 import Classes.DTO.LoggerRecordDto;
+import Classes.DTO.TagDto;
+import Classes.Mapper.TagMapper;
 import Classes.Model.Tag;
 import Classes.Model.UserSession;
 import Classes.Repository.TagDatabase;
@@ -42,6 +44,18 @@ public class TagController extends Observable {
         LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), tag, "Tag created.");
         setChanged();
         notifyObservers(log);
+    }
+
+    /**
+     * Method to create a tag using TagDto.
+     * @param userSession The user session creating the tag -> {@link UserSession}
+     * @param tagDto The tag DTO to be created -> {@link TagDto}
+     * @return The created tag DTO -> {@link TagDto}
+     */
+    public TagDto create(UserSession userSession, TagDto tagDto) {
+        Tag tag = TagMapper.fromDto(tagDto);
+        createTag(userSession, tag);
+        return TagMapper.toDto(tag);
     }
 
     /**

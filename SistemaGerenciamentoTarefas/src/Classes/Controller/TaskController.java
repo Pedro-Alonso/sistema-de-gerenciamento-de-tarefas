@@ -4,6 +4,8 @@ import java.util.Observable;
 import java.time.LocalDate;
 
 import Classes.DTO.LoggerRecordDto;
+import Classes.DTO.TaskDto;
+import Classes.Mapper.TaskMapper;
 import Classes.Model.Project;
 import Classes.Model.Task;
 import Classes.Model.UserSession;
@@ -57,6 +59,12 @@ public class TaskController extends Observable {
         } else {
             throw new IllegalArgumentException("Usuário não pertence ao projeto.");
         }
+    }
+
+    public TaskDto create(Project project, UserSession userSession, TaskDto taskDto) {
+        Task task = TaskMapper.fromDto(taskDto);
+        createTask(project, userSession, task);
+        return TaskMapper.toDto(task);
     }
 
     /**

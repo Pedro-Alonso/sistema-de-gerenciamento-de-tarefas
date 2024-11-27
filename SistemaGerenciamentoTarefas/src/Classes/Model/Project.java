@@ -41,6 +41,25 @@ public class Project {
   }
 
   /**
+   * Constructor for the Project class for DTO purposes
+   * Initializes the ID, beginDate, limitDate, and name attributes
+   * @param id The ID of the project -> {@link UUID}
+   * @param name The name of the project -> {@link String}
+   * @param beginDate The start date of the project -> {@link LocalDate}
+   * @param limitDate The end date of the project -> {@link LocalDate}
+   */
+  public Project(UUID id, String name, LocalDate beginDate, LocalDate limitDate) {
+    this.id = id;
+    this.beginDate = beginDate;
+    this.limitDate = limitDate;
+    taskCount = 0;
+    max = 50;
+    this.name = name;
+    tasks = new ArrayList<Task>();
+    users = new ArrayList<UserTask>();
+  }
+
+  /**
    * Method to search for a task in the project by its ID
    * @param id The ID of the task to be searched -> {@link UUID}
    * @return {@code int} The index of the task in the list, or {@code -1} if not found

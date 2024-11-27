@@ -3,6 +3,8 @@ package Classes.DTO;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import Classes.Model.Task.TaskStatus;
+
 /**
  * Data Transfer Object for Task.
  */
@@ -15,7 +17,7 @@ public class TaskDto {
     private int urgency;
     private int trend;
     private int priority;
-    private String status;
+    private TaskStatus status;
 
     /**
      * {@return the ID of the task as a {@link UUID}}
@@ -140,7 +142,7 @@ public class TaskDto {
     /**
      * {@return the status of the task as a {@link String}}
      */
-    public String getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
 
@@ -148,7 +150,7 @@ public class TaskDto {
      * Setter for the status of the task.
      * @param status The new status for the task -> {@link String}
      */
-    public void setStatus(String status) {
+    public void setStatus(TaskStatus status) {
         this.status = status;
     }
 }

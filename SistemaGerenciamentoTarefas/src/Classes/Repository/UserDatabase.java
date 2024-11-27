@@ -43,6 +43,20 @@ public class UserDatabase {
     }
 
     /**
+     * Get a User by its ID
+     * @param id the ID of the user to be returned {@link UUID}
+     * @return the user with the given ID, or null if no such user exists
+     */
+    public User getUserById(UUID id) {
+        for (User user : users) {
+            if (user.getId().equals(id)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Updates a user in the database by replacing the existing user with the new user.
      * @param newUser the new user to replace the existing user
      * @return true if the user was updated, false otherwise

@@ -3,6 +3,8 @@ package Classes.Controller;
 import java.util.Observable;
 
 import Classes.DTO.LoggerRecordDto;
+import Classes.DTO.TaskCommentDto;
+import Classes.Mapper.TaskCommentMapper;
 import Classes.Model.Task;
 import Classes.Model.TaskComment;
 import Classes.Model.UserSession;
@@ -45,6 +47,19 @@ public class TaskCommentController extends Observable {
         LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), comment, "Comment added.");
         setChanged();
         notifyObservers(log);
+    }
+
+    /**
+     * Method to add a comment to a task using TaskCommentDto.
+     * @param userSession The user session adding the comment -> {@link UserSession}
+     * @param task The task to add the comment to -> {@link Task}
+     * @param commentDto The comment DTO to be added -> {@link TaskCommentDto}
+     * @return The added comment as a TaskCommentDto -> {@link TaskCommentDto}
+     */
+    public TaskCommentDto addComment(UserSession userSession, Task task, TaskCommentDto commentDto) {
+        TaskComment comment = TaskCommentMapper.fromDto(commentDto);
+        addComment(userSession, task, comment);
+        return TaskCommentMapper.toDto(comment);
     }
 
     /**
