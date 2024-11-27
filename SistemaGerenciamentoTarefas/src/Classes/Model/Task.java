@@ -1,4 +1,4 @@
-package Classes;
+package Classes.Model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.UUID;
 
-import Classes.user.UserTask;
+import Classes.Utils;
 
 @SuppressWarnings("deprecation")
 public class Task extends Observable{
@@ -63,6 +63,42 @@ public class Task extends Observable{
     this.deadline = deadline;
     this.priority = gravity * urgency * trend;
     this.status = TaskStatus.TODO;
+    this.tags = new ArrayList<Tag>();
+    this.subTasks = new ArrayList<SubTask>();
+    this.comments = new ArrayList<TaskComment>();
+  }
+
+  /**
+   * Constructor for the Task class for DTO purposes
+   * @param id The id of the Task -> {@link UUID}
+   * @param name The name of the Task -> {@link String}
+   * @param description The description of the Task -> {@link String}
+   * @param deadline The deadline of the Task -> {@link LocalDate}
+   * @param gravity The gravity of the Task -> {@code int}
+   * @param urgency The urgency of the Task -> {@code int}
+   * @param trend The trend of the Task -> {@code int}
+   * @param status The status of the Task -> {@link TaskStatus}
+   * @return {@link Task}
+   */
+  public Task(
+    UUID id,
+    String name,
+    String description,
+    LocalDate deadline,
+    int gravity,
+    int urgency,
+    int trend,
+    TaskStatus status
+  ) {
+    this.user = null;
+    this.name = name;
+    this.description = description;
+    this.deadline = deadline;
+    this.gravity = gravity;
+    this.urgency = urgency;
+    this.trend = trend;
+    this.priority = gravity * urgency * trend;
+    this.status = status;
     this.tags = new ArrayList<Tag>();
     this.subTasks = new ArrayList<SubTask>();
     this.comments = new ArrayList<TaskComment>();

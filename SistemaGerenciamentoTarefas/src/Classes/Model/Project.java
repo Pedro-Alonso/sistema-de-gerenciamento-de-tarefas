@@ -1,11 +1,9 @@
-package Classes;
+package Classes.Model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
-
-import Classes.user.UserTask;
 
 /**
  * Class representing a Project in the task management system.
@@ -33,6 +31,25 @@ public class Project {
    */
   public Project(LocalDate beginDate, LocalDate limitDate, String name) {
     id = UUID.randomUUID();
+    this.beginDate = beginDate;
+    this.limitDate = limitDate;
+    taskCount = 0;
+    max = 50;
+    this.name = name;
+    tasks = new ArrayList<Task>();
+    users = new ArrayList<UserTask>();
+  }
+
+  /**
+   * Constructor for the Project class for DTO purposes
+   * Initializes the ID, beginDate, limitDate, and name attributes
+   * @param id The ID of the project -> {@link UUID}
+   * @param name The name of the project -> {@link String}
+   * @param beginDate The start date of the project -> {@link LocalDate}
+   * @param limitDate The end date of the project -> {@link LocalDate}
+   */
+  public Project(UUID id, String name, LocalDate beginDate, LocalDate limitDate) {
+    this.id = id;
     this.beginDate = beginDate;
     this.limitDate = limitDate;
     taskCount = 0;

@@ -1,9 +1,8 @@
-package Classes;
+package Classes.Model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-
-import Classes.user.UserTask;
+import java.util.UUID;
 
 public class SubTask extends Task {
     /*
@@ -14,13 +13,41 @@ public class SubTask extends Task {
     private ArrayList<String> steps;
     private ArrayList<Boolean> stepsStatus;
 
+    /**
+     * Constructor for the SubTask class
+     * @param user
+     * @param name
+     * @param description
+     * @param deadline
+     * @param gravity
+     * @param urgency
+     * @param trend
+     */
     public SubTask (UserTask user, String name, String description, LocalDate deadline, int gravity, int urgency, int trend) {
         super(user, name, description, deadline, gravity, urgency, trend);
         steps = new ArrayList<String>();
         stepsStatus = new ArrayList<Boolean>();
     }
 
-    // Methods
+    
+    /**
+     * Constructor for the SubTask class for DTO purposes
+     * @param id
+     * @param user
+     * @param name
+     * @param description
+     * @param deadline
+     * @param gravity
+     * @param urgency
+     * @param trend
+     * @param steps
+     * @param stepsStatus
+     */
+    public SubTask (UUID id, String name, String description, LocalDate deadline, int gravity, int urgency, int trend, TaskStatus status, ArrayList<String> steps, ArrayList<Boolean> stepsStatus) {
+        super(id, name, description, deadline, gravity, urgency, trend, status);
+        this.steps = steps;
+        this.stepsStatus = stepsStatus;
+    }
 
     public void changeStepStatus (int stepIndex) {
         if (stepsStatus.get(stepIndex) == true) {

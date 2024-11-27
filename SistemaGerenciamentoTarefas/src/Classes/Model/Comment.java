@@ -1,13 +1,13 @@
-package Classes;
+package Classes.Model;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import Classes.user.UserTask;
+import Classes.Utils;
 
-public class Comment {
-    private final UUID id = UUID.randomUUID();
+public abstract class Comment {
+    private UUID id = UUID.randomUUID();
     private UserTask author;
     private String text;
     private ArrayList<String> topics;
@@ -23,6 +23,19 @@ public class Comment {
      */
     public Comment(UserTask author, String text) {
         this.author = author;
+        this.text = text;
+        this.topics = new ArrayList<>();
+    }
+
+    /**
+     * Constructor for the Comment class for DTO purposes
+     * 
+     * @param commentId The ID of the comment -> {@link UUID}
+     * @param text The text of the comment -> {@link String}
+     * @param authorId The ID of the author of the comment -> {@link UUID}
+     */
+    public Comment(UUID commentId, String text, UUID authorId) {
+        this.id = commentId;
         this.text = text;
         this.topics = new ArrayList<>();
     }
@@ -148,8 +161,7 @@ public class Comment {
      * @return {@link String} with the comment details
      */
     protected String displayComment() {
-        Utils utils = new Utils();
-        String topics = utils.getListString(this.topics, String::toString);
+        String topics = Utils.getListString(this.topics, String::toString);
         return String.format(
             """
             Autor: %s

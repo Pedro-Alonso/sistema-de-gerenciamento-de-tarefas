@@ -1,8 +1,6 @@
-package Classes;
+package Classes.Model;
 
 import java.util.UUID;
-
-import Classes.user.UserTask;
 
 public class TaskComment extends Comment {
     private UUID taskId;
@@ -17,6 +15,19 @@ public class TaskComment extends Comment {
      */
     public TaskComment(UserTask author, String text, UUID taskId) {
         super(author, text); // Calls the correct constructor from Comment
+        this.taskId = taskId;
+    }
+
+    /**
+     * Constructor for the TaskComment class for DTO purposes
+     * 
+     * @param commentId The ID of the comment -> {@link UUID}
+     * @param text The text of the comment -> {@link String}
+     * @param authorId The ID of the author of the comment -> {@link UUID}
+     * @param taskId The ID of the task associated with this comment -> {@link UUID}
+     */
+    public TaskComment(UUID commentId, String text, UUID authorId, UUID taskId) {
+        super(commentId, text, authorId);
         this.taskId = taskId;
     }
 

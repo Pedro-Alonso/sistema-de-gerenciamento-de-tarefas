@@ -3,18 +3,25 @@ package Classes.Controller;
 import java.util.Observable;
 import java.time.LocalDate;
 
-import Classes.Project;
-import Classes.Task;
 import Classes.DTO.LoggerRecordDto;
-import Classes.user.UserTask;
+import Classes.DTO.ProjectDto;
+import Classes.Mapper.ProjectMapper;
+import Classes.Model.Project;
+import Classes.Model.UserSession;
+import Classes.Model.UserTask;
+import Classes.Repository.ProjectDatabase;
 
 @SuppressWarnings("deprecation")
 public class ProjectController extends Observable {
+    private final ProjectDatabase projectDatabase;
+
     /**
      * Constructor for the ProjectController class.
+     * Initializes the ProjectDatabase instance.
      */
     public ProjectController() {
         super();
+        this.projectDatabase = ProjectDatabase.getInstance();
     }
 
     /**
@@ -28,110 +35,128 @@ public class ProjectController extends Observable {
 
     /**
      * Method to create a project.
-     * @param beginDate The start date of the project -> {@link LocalDate}
-     * @param limitDate The end date of the project -> {@link LocalDate}
-     * @param name The name of the project -> {@link String}
-     * @param userTask The user creating the project -> {@link UserTask}
-     * @return The created project -> {@link Project}
+     * @param userSession The user session creating the project -> {@link UserSession}
+     * @param projectDto The project DTO to be created -> {@link ProjectDto}
+     * @return The created project DTO -> {@link ProjectDto}
      */
-    public Project createProject(LocalDate beginDate, LocalDate limitDate, String name, UserTask userTask) {
-        Project project = new Project(beginDate, limitDate, name);
+    public ProjectDto createProject(UserSession userSession, ProjectDto projectDto) {
+        if (!userSession.getStatus()) {
+            throw new IllegalStateException("User session is not active.");
+        }
+        UserTask userTask = (UserTask) userSession.getUser();
+        if (userTask == null) {
+            throw new IllegalStateException("User session is invalid.");
+        }
+        Project project = ProjectMapper.fromDto(projectDto);
+        projectDatabase.addProject(project);
         LoggerRecordDto log = new LoggerRecordDto(userTask, project, "Project created.");
         setChanged();
         notifyObservers(log);
-        return project;
+        return ProjectMapper.toDto(project);
     }
 
     /**
-     * Method to add a task to a project.
-     * @param project The project to add the task to -> {@link Project}
-     * @param task The task to be added -> {@link Task}
-     * @param userTask The user adding the task -> {@link UserTask}
+     * Method to update a project name.
+     * @param userSession The user session updating the project -> {@link UserSession}
+     * @param projectDto The project DTO to be updated -> {@link ProjectDto}
+     * @param name The new name for the project -> {@link String}
      */
-    public void addTaskToProject(Project project, Task task, UserTask userTask) {
-        project.addTask(task);
-        LoggerRecordDto log = new LoggerRecordDto(userTask, task, "Task added to project.");
+    public void updateProjectName(UserSession userSession, ProjectDto projectDto, String name) {
+        if (!userSession.getStatus()) {
+            throw new IllegalStateException("User session is not active.");
+        }
+        UserTask userTask = (UserTask) userSession.getUser();
+        if (userTask == null) {
+            throw new IllegalStateException("User session is invalid.");
+        }
+        Project project = ProjectMapper.fromDto(projectDto);
+        project.setName(name);
+        projectDatabase.updateProject(project);
+        LoggerRecordDto log = new LoggerRecordDto(userTask, project, "Project name updated.");
         setChanged();
         notifyObservers(log);
     }
 
     /**
-     * Method to remove a task from a project.
-     * @param project The project to remove the task from -> {@link Project}
-     * @param task The task to be removed -> {@link Task}
-     * @param userTask The user removing the task -> {@link UserTask}
+     * Method to update a project deadline.
+     * @param userSession The user session updating the project -> {@link UserSession}
+     * @param projectDto The project DTO to be updated -> {@link ProjectDto}
+     * @param deadline The new deadline for the project -> {@link LocalDate}
      */
-    public void removeTaskFromProject(Project project, Task task, UserTask userTask) {
-        project.removeTask(task.getId());
-        LoggerRecordDto log = new LoggerRecordDto(userTask, task, "Task removed from project.");
+    public void updateProjectDeadline(UserSession userSession, ProjectDto projectDto, LocalDate deadline) {
+        if (!userSession.getStatus()) {
+            throw new IllegalStateException("User session is not active.");
+        }
+        UserTask userTask = (UserTask) userSession.getUser();
+        if (userTask == null) {
+            throw new IllegalStateException("User session is invalid.");
+        }
+        Project project = ProjectMapper.fromDto(projectDto);
+        project.setLimitDate(deadline);
+        projectDatabase.updateProject(project);
+        LoggerRecordDto log = new LoggerRecordDto(userTask, project, "Project deadline updated.");
         setChanged();
         notifyObservers(log);
     }
 
     /**
      * Method to add a user to a project.
-     * @param project The project to add the user to -> {@link Project}
+     * @param userSession The user session adding the user -> {@link UserSession}
+     * @param projectDto The project DTO to add the user to -> {@link ProjectDto}
      * @param userTask The user to be added -> {@link UserTask}
-     * @param editor The user adding the user -> {@link UserTask}
      */
-    public void addUserToProject(Project project, UserTask userTask, UserTask editor) {
+    public void addUserToProject(UserSession userSession, ProjectDto projectDto, UserTask userTask) {
+        if (!userSession.getStatus()) {
+            throw new IllegalStateException("User session is not active.");
+        }
+        if (userTask == null) {
+            throw new IllegalStateException("User task is invalid.");
+        }
+        Project project = ProjectMapper.fromDto(projectDto);
         project.addUser(userTask);
-        LoggerRecordDto log = new LoggerRecordDto(editor, project, "User added to project.");
+        projectDatabase.updateProject(project);
+        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), project, "User added to project.");
         setChanged();
         notifyObservers(log);
     }
 
     /**
      * Method to remove a user from a project.
-     * @param project The project to remove the user from -> {@link Project}
+     * @param userSession The user session removing the user -> {@link UserSession}
+     * @param projectDto The project DTO to remove the user from -> {@link ProjectDto}
      * @param userTask The user to be removed -> {@link UserTask}
-     * @param editor The user removing the user -> {@link UserTask}
      */
-    public void removeUserFromProject(Project project, UserTask userTask, UserTask editor) {
+    public void removeUserFromProject(UserSession userSession, ProjectDto projectDto, UserTask userTask) {
+        if (!userSession.getStatus()) {
+            throw new IllegalStateException("User session is not active.");
+        }
+        if (userTask == null) {
+            throw new IllegalStateException("User task is invalid.");
+        }
+        Project project = ProjectMapper.fromDto(projectDto);
         project.removeUser(userTask.getId());
-        LoggerRecordDto log = new LoggerRecordDto(editor, project, "User removed from project.");
+        projectDatabase.updateProject(project);
+        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), project, "User removed from project.");
         setChanged();
         notifyObservers(log);
     }
 
     /**
-     * Method to update the name of a project.
-     * @param project The project to be updated -> {@link Project}
-     * @param name The new name for the project -> {@link String}
-     * @param userTask The user updating the project name -> {@link UserTask}
+     * Method to remove a project.
+     * @param userSession The user session removing the project -> {@link UserSession}
+     * @param projectDto The project DTO to be removed -> {@link ProjectDto}
      */
-    public void updateProjectName(Project project, String name, UserTask userTask) {
-        String oldName = project.getName();
-        project.setName(name);
-        LoggerRecordDto log = new LoggerRecordDto(userTask, project, "Project name updated from '" + oldName + "' to '" + name + "'.");
-        setChanged();
-        notifyObservers(log);
-    }
-
-    /**
-     * Method to update the start date of a project.
-     * @param project The project to be updated -> {@link Project}
-     * @param beginDate The new start date for the project -> {@link LocalDate}
-     * @param userTask The user updating the project start date -> {@link UserTask}
-     */
-    public void updateProjectBeginDate(Project project, LocalDate beginDate, UserTask userTask) {
-        LocalDate oldBeginDate = project.getBeginDate();
-        project.setBeginDate(beginDate);
-        LoggerRecordDto log = new LoggerRecordDto(userTask, project, "Project begin date updated from '" + oldBeginDate + "' to '" + beginDate + "'.");
-        setChanged();
-        notifyObservers(log);
-    }
-
-    /**
-     * Method to update the end date of a project.
-     * @param project The project to be updated -> {@link Project}
-     * @param limitDate The new end date for the project -> {@link LocalDate}
-     * @param userTask The user updating the project end date -> {@link UserTask}
-     */
-    public void updateProjectLimitDate(Project project, LocalDate limitDate, UserTask userTask) {
-        LocalDate oldLimitDate = project.getLimitDate();
-        project.setLimitDate(limitDate);
-        LoggerRecordDto log = new LoggerRecordDto(userTask, project, "Project limit date updated from '" + oldLimitDate + "' to '" + limitDate + "'.");
+    public void removeProject(UserSession userSession, ProjectDto projectDto) {
+        if (!userSession.getStatus()) {
+            throw new IllegalStateException("User session is not active.");
+        }
+        UserTask userTask = (UserTask) userSession.getUser();
+        if (userTask == null) {
+            throw new IllegalStateException("User session is invalid.");
+        }
+        Project project = ProjectMapper.fromDto(projectDto);
+        projectDatabase.removeProject(project.getId());
+        LoggerRecordDto log = new LoggerRecordDto(userTask, project, "Project removed.");
         setChanged();
         notifyObservers(log);
     }

@@ -1,4 +1,4 @@
-package Classes;
+package Classes.Model;
 
 import java.util.ArrayList;
 import java.util.Observer;

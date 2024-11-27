@@ -1,4 +1,4 @@
-package Classes.user;
+package Classes.Model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -6,10 +6,10 @@ import java.util.UUID;
 import java.util.Base64;
 import java.util.regex.Pattern;
 
-public class User {
+public abstract class User {
 
     private String username;
-    private final UUID id;
+    private UUID id;
     private String email;
     private String password;
     private final LocalDateTime createdAt;
@@ -30,6 +30,21 @@ public class User {
         this.id = UUID.randomUUID();
         setUserEmail(email);
         setUserPassword(password);
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = this.createdAt;
+    }
+
+    /**
+     * Constructor for the User class for DTO purposes
+     * @param id The id of the User -> {@link UUID}
+     * @param username The name of the User -> {@link String}
+     * @param email The email of the User -> {@link String}
+     */
+    public User(UUID id, String username, String email){
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = "";
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
     }
