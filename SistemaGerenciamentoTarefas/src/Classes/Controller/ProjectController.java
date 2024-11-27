@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import Classes.DTO.LoggerRecordDto;
 import Classes.Model.Project;
 import Classes.Model.Task;
+import Classes.Model.User;
 import Classes.Model.UserSession;
 import Classes.Model.UserTask;
 
@@ -39,6 +40,9 @@ public class ProjectController extends Observable {
         if (!userSession.getStatus()) {
             throw new IllegalStateException("User session is not active.");
         }
+        if (userSession.getUser() == null) {
+            throw new IllegalStateException("User session is invalid.");
+        }
         Project project = new Project(beginDate, limitDate, name);
         LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), project, "Project created.");
         setChanged();
@@ -56,6 +60,9 @@ public class ProjectController extends Observable {
         if (!userSession.getStatus()) {
             throw new IllegalStateException("User session is not active.");
         }
+        if (userSession.getUser() == null) {
+            throw new IllegalStateException("User session is invalid.");
+        }
         project.addTask(task);
         LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), task, "Task added to project.");
         setChanged();
@@ -72,6 +79,9 @@ public class ProjectController extends Observable {
         if (!userSession.getStatus()) {
             throw new IllegalStateException("User session is not active.");
         }
+        if (userSession.getUser() == null) {
+            throw new IllegalStateException("User session is invalid.");
+        }
         project.removeTask(task.getId());
         LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), task, "Task removed from project.");
         setChanged();
@@ -81,15 +91,18 @@ public class ProjectController extends Observable {
     /**
      * Method to add a user to a project.
      * @param project The project to add the user to -> {@link Project}
-     * @param userSession The session of the user to be added -> {@link UserSession}
+     * @param user The user to be added -> {@link User}
      * @param editorSession The session of the user adding the user -> {@link UserSession}
      */
-    public void addUserToProject(Project project, UserSession userSession, UserSession editorSession) {
+    public void addUserToProject(Project project, User user, UserSession editorSession) {
         if (!editorSession.getStatus()) {
             throw new IllegalStateException("Editor session is not active.");
         }
-        UserTask user = (UserTask) (userSession.getUser());
-        project.addUser(user);
+        if (user == null || editorSession.getUser() == null) {
+            throw new IllegalStateException("User session is invalid.");
+        }
+        UserTask userTask = (UserTask) user;
+        project.addUser(userTask);
         LoggerRecordDto log = new LoggerRecordDto(editorSession.getUser(), project, "User added to project.");
         setChanged();
         notifyObservers(log);
@@ -98,14 +111,17 @@ public class ProjectController extends Observable {
     /**
      * Method to remove a user from a project.
      * @param project The project to remove the user from -> {@link Project}
-     * @param userSession The session of the user to be removed -> {@link UserSession}
+     * @param user The user to be removed -> {@link User}
      * @param editorSession The session of the user removing the user -> {@link UserSession}
      */
-    public void removeUserFromProject(Project project, UserSession userSession, UserSession editorSession) {
+    public void removeUserFromProject(Project project, User user, UserSession editorSession) {
         if (!editorSession.getStatus()) {
             throw new IllegalStateException("Editor session is not active.");
         }
-        project.removeUser(userSession.getUser().getId());
+        if (user == null || editorSession.getUser() == null) {
+            throw new IllegalStateException("User session is invalid.");
+        }
+        project.removeUser(user.getId());
         LoggerRecordDto log = new LoggerRecordDto(editorSession.getUser(), project, "User removed from project.");
         setChanged();
         notifyObservers(log);
@@ -120,6 +136,9 @@ public class ProjectController extends Observable {
     public void updateProjectName(Project project, String name, UserSession userSession) {
         if (!userSession.getStatus()) {
             throw new IllegalStateException("User session is not active.");
+        }
+        if (userSession.getUser() == null) {
+            throw new IllegalStateException("User session is invalid.");
         }
         String oldName = project.getName();
         project.setName(name);
@@ -138,6 +157,9 @@ public class ProjectController extends Observable {
         if (!userSession.getStatus()) {
             throw new IllegalStateException("User session is not active.");
         }
+        if (userSession.getUser() == null) {
+            throw new IllegalStateException("User session is invalid.");
+        }
         LocalDate oldBeginDate = project.getBeginDate();
         project.setBeginDate(beginDate);
         LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), project, "Project begin date updated from '" + oldBeginDate + "' to '" + beginDate + "'.");
@@ -154,6 +176,9 @@ public class ProjectController extends Observable {
     public void updateProjectLimitDate(Project project, LocalDate limitDate, UserSession userSession) {
         if (!userSession.getStatus()) {
             throw new IllegalStateException("User session is not active.");
+        }
+        if (userSession.getUser() == null) {
+            throw new IllegalStateException("User session is invalid.");
         }
         LocalDate oldLimitDate = project.getLimitDate();
         project.setLimitDate(limitDate);

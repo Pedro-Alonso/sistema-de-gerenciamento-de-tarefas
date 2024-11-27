@@ -1,4 +1,3 @@
-
 package Classes.Controller;
 
 import java.util.Observable;
@@ -7,6 +6,7 @@ import java.time.LocalDate;
 import Classes.DTO.LoggerRecordDto;
 import Classes.Model.SubTask;
 import Classes.Model.Task;
+import Classes.Model.UserSession;
 import Classes.Model.UserTask;
 
 @SuppressWarnings("deprecation")
@@ -36,13 +36,20 @@ public class SubTaskController extends Observable {
     * @param gravity The gravity of the subtask -> {@link int}
     * @param urgency The urgency of the subtask -> {@link int}
     * @param trend The trend of the subtask -> {@link int}
-    * @param userTask The user creating the subtask -> {@link UserTask}
+    * @param userSession The session of the user creating the subtask -> {@link UserSession}
     * @return The created subtask -> {@link SubTask}
     */
-    public SubTask createSubTask(Task task, String name, String description, LocalDate deadline, int gravity, int urgency, int trend, UserTask userTask) {
-        SubTask subTask = new SubTask(userTask, name, description, deadline, gravity, urgency, trend);
+    public SubTask createSubTask(Task task, String name, String description, LocalDate deadline, int gravity, int urgency, int trend, UserSession userSession) {
+        if (!userSession.getStatus()) {
+            throw new IllegalStateException("User session is not active.");
+        }
+        UserTask user = (UserTask) userSession.getUser();
+        if (user == null) {
+            throw new IllegalStateException("User session is invalid.");
+        }
+        SubTask subTask = new SubTask(user, name, description, deadline, gravity, urgency, trend);
         task.addSubTask(subTask);
-        LoggerRecordDto log = new LoggerRecordDto(userTask, subTask, "SubTask created.");
+        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), subTask, "SubTask created.");
         setChanged();
         notifyObservers(log);
         return subTask;
@@ -52,12 +59,18 @@ public class SubTaskController extends Observable {
      * Method to update the name of a subtask.
      * @param subTask The subtask to be updated -> {@link SubTask}
      * @param name The new name for the subtask -> {@link String}
-     * @param userTask The user updating the subtask -> {@link UserTask}
+     * @param userSession The session of the user updating the subtask -> {@link UserSession}
      */
-    public void updateSubTaskName(SubTask subTask, String name, UserTask userTask) {
+    public void updateSubTaskName(SubTask subTask, String name, UserSession userSession) {
+        if (!userSession.getStatus()) {
+            throw new IllegalStateException("User session is not active.");
+        }
+        if (userSession.getUser() == null) {
+            throw new IllegalStateException("User session is invalid.");
+        }
         String oldName = subTask.getName();
         subTask.setName(name);
-        LoggerRecordDto log = new LoggerRecordDto(userTask, subTask, "SubTask name updated from '" + oldName + "' to '" + name + "'.");
+        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), subTask, "SubTask name updated from '" + oldName + "' to '" + name + "'.");
         setChanged();
         notifyObservers(log);
     }
@@ -66,12 +79,18 @@ public class SubTaskController extends Observable {
      * Method to update the description of a subtask.
      * @param subTask The subtask to be updated -> {@link SubTask}
      * @param description The new description for the subtask -> {@link String}
-     * @param userTask The user updating the subtask -> {@link UserTask}
+     * @param userSession The session of the user updating the subtask -> {@link UserSession}
      */
-    public void updateSubTaskDescription(SubTask subTask, String description, UserTask userTask) {
+    public void updateSubTaskDescription(SubTask subTask, String description, UserSession userSession) {
+        if (!userSession.getStatus()) {
+            throw new IllegalStateException("User session is not active.");
+        }
+        if (userSession.getUser() == null) {
+            throw new IllegalStateException("User session is invalid.");
+        }
         String oldDescription = subTask.getDescription();
         subTask.setDescription(description);
-        LoggerRecordDto log = new LoggerRecordDto(userTask, subTask, "SubTask description updated from '" + oldDescription + "' to '" + description + "'.");
+        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), subTask, "SubTask description updated from '" + oldDescription + "' to '" + description + "'.");
         setChanged();
         notifyObservers(log);
     }
@@ -80,12 +99,18 @@ public class SubTaskController extends Observable {
      * Method to update the deadline of a subtask.
      * @param subTask The subtask to be updated -> {@link SubTask}
      * @param deadline The new deadline for the subtask -> {@link LocalDate}
-     * @param userTask The user updating the subtask -> {@link UserTask}
+     * @param userSession The session of the user updating the subtask -> {@link UserSession}
      */
-    public void updateSubTaskDeadline(SubTask subTask, LocalDate deadline, UserTask userTask) {
+    public void updateSubTaskDeadline(SubTask subTask, LocalDate deadline, UserSession userSession) {
+        if (!userSession.getStatus()) {
+            throw new IllegalStateException("User session is not active.");
+        }
+        if (userSession.getUser() == null) {
+            throw new IllegalStateException("User session is invalid.");
+        }
         LocalDate oldDeadline = subTask.getDeadline();
         subTask.setDeadline(deadline);
-        LoggerRecordDto log = new LoggerRecordDto(userTask, subTask, "SubTask deadline updated from '" + oldDeadline + "' to '" + deadline + "'.");
+        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), subTask, "SubTask deadline updated from '" + oldDeadline + "' to '" + deadline + "'.");
         setChanged();
         notifyObservers(log);
     }
@@ -94,11 +119,17 @@ public class SubTaskController extends Observable {
      * Method to remove a subtask.
      * @param task The parent task of the subtask -> {@link Task}
      * @param subTask The subtask to be removed -> {@link SubTask}
-     * @param userTask The user removing the subtask -> {@link UserTask}
+     * @param userSession The session of the user removing the subtask -> {@link UserSession}
      */
-    public void removeSubTask(Task task, SubTask subTask, UserTask userTask) {
+    public void removeSubTask(Task task, SubTask subTask, UserSession userSession) {
+        if (!userSession.getStatus()) {
+            throw new IllegalStateException("User session is not active.");
+        }
+        if (userSession.getUser() == null) {
+            throw new IllegalStateException("User session is invalid.");
+        }
         task.removeSubTask(subTask.getId());
-        LoggerRecordDto log = new LoggerRecordDto(userTask, subTask, "SubTask removed.");
+        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), subTask, "SubTask removed.");
         setChanged();
         notifyObservers(log);
     }

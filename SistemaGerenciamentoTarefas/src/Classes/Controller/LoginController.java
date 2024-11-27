@@ -17,7 +17,14 @@ public class LoginController {
      * @return UserSession if login is successful, null otherwise
      */
     public UserSession logIn(String usernameOrEmail, String password) {
-        return loginService.authenticate(usernameOrEmail, password);
+        if (usernameOrEmail == null || password == null) {
+            throw new IllegalArgumentException("Username/email and password must not be null.");
+        }
+        UserSession userSession = loginService.authenticate(usernameOrEmail, password);
+        if (userSession == null) {
+            System.out.println("Invalid credentials.");
+        }
+        return userSession;
     }
 
     // public static void main(String[] args) {
