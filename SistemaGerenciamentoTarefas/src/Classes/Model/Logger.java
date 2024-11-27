@@ -3,7 +3,13 @@ package Classes.Model;
 import java.util.ArrayList;
 import java.util.Observer;
 
+import Classes.Controller.LoginController;
+import Classes.Controller.ProjectController;
+import Classes.Controller.SubTaskController;
+import Classes.Controller.TagController;
+import Classes.Controller.TaskCommentController;
 import Classes.Controller.TaskController;
+import Classes.Controller.UserController;
 import Classes.DTO.LoggerRecordDto;
 
 import java.util.Observable;
@@ -78,6 +84,31 @@ public class Logger implements Observer {
             LoggerRecordDto log = (LoggerRecordDto) arg;
             publish(new LoggerRecord(log.getEditor(), log.getSubject(), log.getMessage()));
         }
+
+        if (o instanceof ProjectController) {
+            LoggerRecordDto log = (LoggerRecordDto) arg;
+            publish(new LoggerRecord(log.getEditor(), log.getSubject(), log.getMessage()));
+        }
+
+        if (o instanceof UserController) {
+            LoggerRecordDto log = (LoggerRecordDto) arg;
+            publish(new LoggerRecord(log.getEditor(), log.getSubject(), log.getMessage()));
+        }
+
+        if (o instanceof TaskCommentController) {
+            LoggerRecordDto log = (LoggerRecordDto) arg;
+            publish(new LoggerRecord(log.getEditor(), log.getSubject(), log.getMessage()));
+        }
+
+        if (o instanceof SubTaskController) {
+            LoggerRecordDto log = (LoggerRecordDto) arg;
+            publish(new LoggerRecord(log.getEditor(), log.getSubject(), log.getMessage()));
+        }
+
+        if (o instanceof TagController) {
+            LoggerRecordDto log = (LoggerRecordDto) arg;
+            publish(new LoggerRecord(log.getEditor(), log.getSubject(), log.getMessage()));
+        }
     }
 
     /**
@@ -86,5 +117,60 @@ public class Logger implements Observer {
      */
     public void observe(TaskController taskController) {
         taskController.addObserver(this);
+    }
+
+    /**
+     * Method to add the Logger as an observer to the ProjectController.
+     * @param projectController The ProjectController to observe -> {@link ProjectController}
+     */
+    public void observe(ProjectController projectController) {
+        projectController.addObserver(this);
+    }
+
+    /**
+     * Method to add the Logger as an observer to the UserController.
+     * @param userController The UserController to observe -> {@link UserController}
+     */
+    public void observe(UserController userController) {
+        userController.addObserver(this);
+    }
+
+    /**
+     * Method to add the Logger as an observer to the TaskCommentController.
+     * @param taskCommentController The TaskCommentController to observe -> {@link TaskCommentController}
+     */
+    public void observe(TaskCommentController taskCommentController) {
+        taskCommentController.addObserver(this);
+    }
+
+    /**
+     * Method to add the Logger as an observer to the SubTaskController.
+     * @param subTaskController The SubTaskController to observe -> {@link SubTaskController}
+     */
+    public void observe(SubTaskController subTaskController) {
+        subTaskController.addObserver(this);
+
+    }
+
+    /**
+     * Method to add the Logger as an observer to the TagController.
+     * @param tagController The TagController to observe -> {@link TagController}
+     */
+    public void observe(TagController tagController) {
+        tagController.addObserver(this);
+    }
+
+    
+
+    /**
+     * Method to get the log records as a string.
+     * @return The log records as a string.
+     */
+    public String getLogsAsString() {
+        StringBuilder logsAsString = new StringBuilder();
+        for (LoggerRecord log : logs) {
+            logsAsString.append(log.toString()).append("\n");
+        }
+        return logsAsString.toString();
     }
 }

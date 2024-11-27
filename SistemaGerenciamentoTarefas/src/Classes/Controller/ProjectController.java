@@ -39,19 +39,22 @@ public class ProjectController extends Observable {
      * @param projectDto The project DTO to be created -> {@link ProjectDto}
      * @return The created project DTO -> {@link ProjectDto}
      */
-    public ProjectDto createProject(UserSession userSession, ProjectDto projectDto) {
+    public Project createProject(LocalDate beginDate, LocalDate limitDate, String name, UserSession userSession) {
         if (!userSession.getStatus()) {
             throw new IllegalStateException("User session is not active.");
         }
-        UserTask userTask = (UserTask) userSession.getUser();
-        if (userTask == null) {
+        if (userSession.getUser() == null) {
             throw new IllegalStateException("User session is invalid.");
         }
-        Project project = ProjectMapper.fromDto(projectDto);
-        projectDatabase.addProject(project);
-        LoggerRecordDto log = new LoggerRecordDto(userTask, project, "Project created.");
+        Project project = new Project(beginDate, limitDate, name);
+        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), project, "Project created.");
         setChanged();
         notifyObservers(log);
+        return project;
+    }
+
+    public ProjectDto createProjectDto(LocalDate beginDate, LocalDate limitDate, String name, UserSession userSession) {
+        Project project = createProject(beginDate, limitDate, name, userSession);
         return ProjectMapper.toDto(project);
     }
 
@@ -113,6 +116,9 @@ public class ProjectController extends Observable {
             throw new IllegalStateException("User task is invalid.");
         }
         Project project = ProjectMapper.fromDto(projectDto);
+        if (project == null) {
+            throw new IllegalStateException("Project is invalid.");
+        }
         project.addUser(userTask);
         projectDatabase.updateProject(project);
         LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), project, "User added to project.");

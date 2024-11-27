@@ -9,10 +9,12 @@ import Classes.Model.Task;
 import Classes.Model.TaskComment;
 import Classes.Model.UserSession;
 import Classes.Repository.CommentDatabase;
+import Classes.Repository.TaskDatabase;
 
 @SuppressWarnings("deprecation")
 public class TaskCommentController extends Observable {
     private final CommentDatabase commentDatabase;
+    private final TaskDatabase taskDatabase;
 
     /**
      * Constructor for the TaskCommentController class.
@@ -21,6 +23,7 @@ public class TaskCommentController extends Observable {
     public TaskCommentController() {
         super();
         this.commentDatabase = CommentDatabase.getInstance();
+        this.taskDatabase = TaskDatabase.getInstance();
     }
 
     /**
@@ -41,6 +44,9 @@ public class TaskCommentController extends Observable {
     public void addComment(UserSession userSession, Task task, TaskComment comment) {
         if (!userSession.getStatus()) {
             throw new IllegalStateException("User session is not active.");
+        }
+        if (taskDatabase.getTaskById(task.getId()) == null) {
+            throw new IllegalArgumentException("Task does not exist.");
         }
         task.addComment(comment);
         commentDatabase.addComment(comment);

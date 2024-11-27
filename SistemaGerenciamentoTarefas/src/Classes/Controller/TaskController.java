@@ -11,10 +11,12 @@ import Classes.Model.Task;
 import Classes.Model.UserSession;
 import Classes.Model.UserTask;
 import Classes.Repository.TaskDatabase;
+import Classes.Repository.ProjectDatabase;
 
 @SuppressWarnings("deprecation")
 public class TaskController extends Observable {
     private final TaskDatabase taskDatabase;
+    private final ProjectDatabase projectDatabase;
 
     /**
      * Constructor for the TaskController class.
@@ -23,6 +25,7 @@ public class TaskController extends Observable {
     public TaskController() {
         super();
         this.taskDatabase = TaskDatabase.getInstance();
+        this.projectDatabase = ProjectDatabase.getInstance();
     }
 
     /**
@@ -41,7 +44,7 @@ public class TaskController extends Observable {
      * @param task The task to be created -> {@link Task}
      * @throws IllegalArgumentException if the user task is not part of the project
      */
-    public void createTask(Project project, UserSession userSession, Task task) {
+    public TaskDto createTask(Project project, UserSession userSession, TaskDto taskDto) {
         if (!userSession.getStatus()) {
             throw new IllegalStateException("User session is not active.");
         }
@@ -49,22 +52,20 @@ public class TaskController extends Observable {
         if (userTask == null) {
             throw new IllegalStateException("User session is invalid.");
         }
-        if (project.getUsers() != null && project.getUsers().contains(userTask)) {
-            project.addTask(task);
-            userTask.addTask(task);
-            taskDatabase.addTask(task);
-            LoggerRecordDto log = new LoggerRecordDto(userTask, task, "Task created.");
-            setChanged();
-            notifyObservers(log);
-        } else {
-            throw new IllegalArgumentException("Usuário não pertence ao projeto.");
+        if (project.getUsers() == null || !project.getUsers().contains(userTask)) {
+            project.addUser(userTask); // Ensure the user is added to the project
         }
+        Task task = new Task(taskDto.getId(), taskDto.getName(), taskDto.getDescription(), taskDto.getDeadline(), taskDto.getGravity(), taskDto.getUrgency(), taskDto.getTrend(), taskDto.getStatus());
+        project.addTask(task);
+        projectDatabase.updateProject(project);
+        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), task, "Task created.");
+        setChanged();
+        notifyObservers(log);
+        return TaskMapper.toDto(task);
     }
 
     public TaskDto create(Project project, UserSession userSession, TaskDto taskDto) {
-        Task task = TaskMapper.fromDto(taskDto);
-        createTask(project, userSession, task);
-        return TaskMapper.toDto(task);
+        return createTask(project, userSession, taskDto);
     }
 
     /**

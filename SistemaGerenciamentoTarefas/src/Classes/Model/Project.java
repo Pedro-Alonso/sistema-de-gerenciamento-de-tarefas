@@ -166,6 +166,15 @@ public class Project {
   }
 
   /**
+   * Setter for the ID of the project
+   * @param id The new ID for the project -> {@link UUID}
+   */
+  public void setId(UUID id) {
+    this.id = id;
+    this.updatedAt = LocalDateTime.now();
+  }
+
+  /**
    * {@return the start date of the project as a {@link LocalDate}}
    */
   public LocalDate getBeginDate() {

@@ -20,7 +20,8 @@ public class LoginController {
         if (usernameOrEmail == null || password == null) {
             throw new IllegalArgumentException("Username/email and password must not be null.");
         }
-        UserSession userSession = loginService.authenticate(usernameOrEmail, password);
+        String encryptedPassword = loginService.encodePassword(password);
+        UserSession userSession = loginService.authenticate(usernameOrEmail, encryptedPassword);
         if (userSession == null) {
             System.out.println("Invalid credentials.");
         }

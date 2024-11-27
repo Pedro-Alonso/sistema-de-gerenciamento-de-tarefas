@@ -1,6 +1,7 @@
 
 package Classes.Mapper;
 
+
 import Classes.DTO.ProjectDto;
 import Classes.Model.Project;
 
@@ -12,12 +13,15 @@ public class ProjectMapper {
      * @return The converted ProjectDto -> {@link ProjectDto}
      */
     public static ProjectDto toDto(Project project) {
-        ProjectDto projectDto = new ProjectDto();
-        projectDto.setId(project.getId());
-        projectDto.setName(project.getName());
-        projectDto.setBeginDate(project.getBeginDate());
-        projectDto.setLimitDate(project.getLimitDate());
-        return projectDto;
+        if (project == null) {
+            throw new IllegalArgumentException("Project cannot be null");
+        }
+        ProjectDto dto = new ProjectDto();
+        dto.setId(project.getId());
+        dto.setBeginDate(project.getBeginDate());
+        dto.setLimitDate(project.getLimitDate());
+        dto.setName(project.getName());
+        return dto;
     }
 
     /**
@@ -25,13 +29,12 @@ public class ProjectMapper {
      * @param projectDto The ProjectDto to be converted -> {@link ProjectDto}
      * @return The converted Project entity -> {@link Project}
      */
-    public static Project fromDto(ProjectDto projectDto) {
-        Project project = new Project(
-            projectDto.getId(),
-            projectDto.getName(),
-            projectDto.getBeginDate(),
-            projectDto.getLimitDate()
-        );
+    public static Project fromDto(ProjectDto dto) {
+        if (dto == null) {
+            throw new IllegalArgumentException("ProjectDto cannot be null");
+        }
+        Project project = new Project(dto.getBeginDate(), dto.getLimitDate(), dto.getName());
+        project.setId(dto.getId());
         return project;
     }
 }

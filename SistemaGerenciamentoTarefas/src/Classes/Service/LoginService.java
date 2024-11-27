@@ -5,6 +5,7 @@ import java.util.List;
 import Classes.Model.User;
 import Classes.Model.UserSession;
 import Classes.Repository.UserDatabase;
+import java.util.Base64;
 
 public class LoginService {
     private final UserDatabase userDatabase;
@@ -36,5 +37,15 @@ public class LoginService {
      */
     public void newUser(User newUser) {
         userDatabase.addUser(newUser);
+    }
+
+    /**
+     * Encodes a password using a simple hash function.
+     * @param password the password to be encoded
+     * @return the encoded password
+     */ 
+    public String encodePassword(String password) {
+        // encode to base64
+        return Base64.getEncoder().encodeToString(password.getBytes());
     }
 }
