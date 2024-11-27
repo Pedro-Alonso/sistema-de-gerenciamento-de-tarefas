@@ -8,14 +8,19 @@ import Classes.Model.SubTask;
 import Classes.Model.Task;
 import Classes.Model.UserSession;
 import Classes.Model.UserTask;
+import Classes.Repository.SubTaskDatabase;
 
 @SuppressWarnings("deprecation")
 public class SubTaskController extends Observable {
+    private final SubTaskDatabase subTaskDatabase;
+
     /**
      * Constructor for the SubTaskController class.
+     * Initializes the SubTaskDatabase instance.
      */
     public SubTaskController() {
         super();
+        this.subTaskDatabase = SubTaskDatabase.getInstance();
     }
 
     /**
@@ -49,12 +54,13 @@ public class SubTaskController extends Observable {
         }
         SubTask subTask = new SubTask(user, name, description, deadline, gravity, urgency, trend);
         task.addSubTask(subTask);
+        subTaskDatabase.addSubTask(subTask);
         LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), subTask, "SubTask created.");
         setChanged();
         notifyObservers(log);
         return subTask;
     }
-        
+
     /**
      * Method to update the name of a subtask.
      * @param subTask The subtask to be updated -> {@link SubTask}
@@ -70,6 +76,7 @@ public class SubTaskController extends Observable {
         }
         String oldName = subTask.getName();
         subTask.setName(name);
+        subTaskDatabase.updateSubTask(subTask);
         LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), subTask, "SubTask name updated from '" + oldName + "' to '" + name + "'.");
         setChanged();
         notifyObservers(log);
@@ -90,6 +97,7 @@ public class SubTaskController extends Observable {
         }
         String oldDescription = subTask.getDescription();
         subTask.setDescription(description);
+        subTaskDatabase.updateSubTask(subTask);
         LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), subTask, "SubTask description updated from '" + oldDescription + "' to '" + description + "'.");
         setChanged();
         notifyObservers(log);
@@ -110,6 +118,7 @@ public class SubTaskController extends Observable {
         }
         LocalDate oldDeadline = subTask.getDeadline();
         subTask.setDeadline(deadline);
+        subTaskDatabase.updateSubTask(subTask);
         LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), subTask, "SubTask deadline updated from '" + oldDeadline + "' to '" + deadline + "'.");
         setChanged();
         notifyObservers(log);
@@ -129,6 +138,7 @@ public class SubTaskController extends Observable {
             throw new IllegalStateException("User session is invalid.");
         }
         task.removeSubTask(subTask.getId());
+        subTaskDatabase.removeSubTask(subTask.getId());
         LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), subTask, "SubTask removed.");
         setChanged();
         notifyObservers(log);

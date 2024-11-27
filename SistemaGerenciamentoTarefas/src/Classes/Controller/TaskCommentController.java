@@ -1,20 +1,24 @@
 package Classes.Controller;
 
 import java.util.Observable;
-import java.util.UUID;
 
 import Classes.DTO.LoggerRecordDto;
+import Classes.Model.Task;
 import Classes.Model.TaskComment;
-import Classes.Model.UserTask;
 import Classes.Model.UserSession;
+import Classes.Repository.CommentDatabase;
 
 @SuppressWarnings("deprecation")
 public class TaskCommentController extends Observable {
+    private final CommentDatabase commentDatabase;
+
     /**
      * Constructor for the TaskCommentController class.
+     * Initializes the CommentDatabase instance.
      */
     public TaskCommentController() {
         super();
+        this.commentDatabase = CommentDatabase.getInstance();
     }
 
     /**
@@ -27,102 +31,52 @@ public class TaskCommentController extends Observable {
     }
 
     /**
-     * Method to create a task comment.
-     * @param authorSession The session of the author of the comment -> {@link UserSession}
-     * @param text The text of the comment -> {@link String}
-     * @param taskId The ID of the task associated with this comment -> {@link UUID}
-     * @return The created comment -> {@link TaskComment}
+     * Method to add a comment to a task.
+     * @param userSession The user session adding the comment -> {@link UserSession}
+     * @param task The task to add the comment to -> {@link Task}
+     * @param comment The comment to be added -> {@link TaskComment}
      */
-    public TaskComment createTaskComment(UserSession authorSession, String text, UUID taskId) {
-        if (!authorSession.getStatus()) {
+    public void addComment(UserSession userSession, Task task, TaskComment comment) {
+        if (!userSession.getStatus()) {
             throw new IllegalStateException("User session is not active.");
         }
-        UserTask user = (UserTask) authorSession.getUser();
-        if (user == null) {
-            throw new IllegalStateException("User session is invalid.");
-        }
-        TaskComment comment = new TaskComment(user, text, taskId);
-        LoggerRecordDto log = new LoggerRecordDto(authorSession.getUser(), comment, "Task comment created.");
+        task.addComment(comment);
+        commentDatabase.addComment(comment);
+        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), comment, "Comment added.");
         setChanged();
         notifyObservers(log);
-        return comment;
     }
 
     /**
-     * Method to update the text of a task comment.
+     * Method to update a comment.
+     * @param userSession The user session updating the comment -> {@link UserSession}
      * @param comment The comment to be updated -> {@link TaskComment}
-     * @param text The new text for the comment -> {@link String}
-     * @param userSession The session of the user updating the comment -> {@link UserSession}
+     * @param newContent The new content for the comment -> {@link String}
      */
-    public void updateTaskCommentText(TaskComment comment, String text, UserSession userSession) {
+    public void updateComment(UserSession userSession, TaskComment comment, String newContent) {
         if (!userSession.getStatus()) {
             throw new IllegalStateException("User session is not active.");
         }
-        if (userSession.getUser() == null) {
-            throw new IllegalStateException("User session is invalid.");
-        }
-        String oldText = comment.getText();
-        comment.setText(text);
-        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), comment, "Task comment text updated from '" + oldText + "' to '" + text + "'.");
+        comment.setText(newContent);
+        commentDatabase.updateComment(comment);
+        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), comment, "Comment updated.");
         setChanged();
         notifyObservers(log);
     }
 
     /**
-     * Method to add a topic to a task comment.
-     * @param comment The comment to add the topic to -> {@link TaskComment}
-     * @param topic The topic to be added -> {@link String}
-     * @param userSession The session of the user adding the topic -> {@link UserSession}
+     * Method to remove a comment from a task.
+     * @param userSession The user session removing the comment -> {@link UserSession}
+     * @param task The task to remove the comment from -> {@link Task}
+     * @param comment The comment to be removed -> {@link TaskComment}
      */
-    public void addTopicToTaskComment(TaskComment comment, String topic, UserSession userSession) {
+    public void removeComment(UserSession userSession, Task task, TaskComment comment) {
         if (!userSession.getStatus()) {
             throw new IllegalStateException("User session is not active.");
         }
-        if (userSession.getUser() == null) {
-            throw new IllegalStateException("User session is invalid.");
-        }
-        comment.addTopic(topic);
-        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), comment, "Topic added to task comment.");
-        setChanged();
-        notifyObservers(log);
-    }
-
-    /**
-     * Method to update a topic in a task comment.
-     * @param comment The comment to update the topic in -> {@link TaskComment}
-     * @param index The index of the topic to be updated -> {@code int}
-     * @param newTopic The new topic -> {@link String}
-     * @param userSession The session of the user updating the topic -> {@link UserSession}
-     */
-    public void updateTaskCommentTopic(TaskComment comment, int index, String newTopic, UserSession userSession) {
-        if (!userSession.getStatus()) {
-            throw new IllegalStateException("User session is not active.");
-        }
-        if (userSession.getUser() == null) {
-            throw new IllegalStateException("User session is invalid.");
-        }
-        String oldTopic = comment.getTopics().get(index);
-        comment.updateTopic(index, newTopic);
-        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), comment, "Topic updated from '" + oldTopic + "' to '" + newTopic + "'.");
-        setChanged();
-        notifyObservers(log);
-    }
-
-    /**
-     * Method to remove a topic from a task comment.
-     * @param comment The comment to remove the topic from -> {@link TaskComment}
-     * @param index The index of the topic to be removed -> {@code int}
-     * @param userSession The session of the user removing the topic -> {@link UserSession}
-     */
-    public void removeTaskCommentTopic(TaskComment comment, int index, UserSession userSession) {
-        if (!userSession.getStatus()) {
-            throw new IllegalStateException("User session is not active.");
-        }
-        if (userSession.getUser() == null) {
-            throw new IllegalStateException("User session is invalid.");
-        }
-        comment.removeTopic(index);
-        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), comment, "Topic removed from task comment.");
+        task.removeComment(comment.getId());
+        commentDatabase.removeComment(comment.getId());
+        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), comment, "Comment removed.");
         setChanged();
         notifyObservers(log);
     }

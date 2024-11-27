@@ -8,14 +8,19 @@ import Classes.Model.Project;
 import Classes.Model.Task;
 import Classes.Model.UserSession;
 import Classes.Model.UserTask;
+import Classes.Repository.TaskDatabase;
 
 @SuppressWarnings("deprecation")
 public class TaskController extends Observable {
+    private final TaskDatabase taskDatabase;
+
     /**
      * Constructor for the TaskController class.
+     * Initializes the TaskDatabase instance.
      */
     public TaskController() {
         super();
+        this.taskDatabase = TaskDatabase.getInstance();
     }
 
     /**
@@ -45,6 +50,7 @@ public class TaskController extends Observable {
         if (project.getUsers() != null && project.getUsers().contains(userTask)) {
             project.addTask(task);
             userTask.addTask(task);
+            taskDatabase.addTask(task);
             LoggerRecordDto log = new LoggerRecordDto(userTask, task, "Task created.");
             setChanged();
             notifyObservers(log);
@@ -71,6 +77,7 @@ public class TaskController extends Observable {
         if (project.getUsers() != null && project.getUsers().contains(userTask)) {
             project.removeTask(task.getId());
             userTask.removeTaskFromProject(project.getId(), task.getId());
+            taskDatabase.removeTask(task.getId());
             LoggerRecordDto log = new LoggerRecordDto(userTask, task, "Task removed.");
             setChanged();
             notifyObservers(log);
@@ -98,6 +105,7 @@ public class TaskController extends Observable {
         if (project.getUsers() != null && project.getUsers().contains(userTask)) {
             String oldName = task.getName();
             task.setName(name);
+            taskDatabase.updateTask(task);
             LoggerRecordDto log = new LoggerRecordDto(userTask, task, "Task name updated from '" + oldName + "' to '" + name + "'.");
             setChanged();
             notifyObservers(log);
@@ -125,6 +133,7 @@ public class TaskController extends Observable {
         if (project.getUsers() != null && project.getUsers().contains(userTask)) {
             String oldDescription = task.getDescription();
             task.setDescription(description);
+            taskDatabase.updateTask(task);
             LoggerRecordDto log = new LoggerRecordDto(userTask, task, "Task description updated from '" + oldDescription + "' to '" + description + "'.");
             setChanged();
             notifyObservers(log);
@@ -152,6 +161,7 @@ public class TaskController extends Observable {
         if (project.getUsers() != null && project.getUsers().contains(userTask)) {
             LocalDate oldDeadline = task.getDeadline();
             task.setDeadline(deadline);
+            taskDatabase.updateTask(task);
             LoggerRecordDto log = new LoggerRecordDto(userTask, task, "Task deadline updated from '" + oldDeadline + "' to '" + deadline + "'.");
             setChanged();
             notifyObservers(log);
@@ -179,6 +189,7 @@ public class TaskController extends Observable {
         if (project.getUsers() != null && project.getUsers().contains(userTask)) {
             int oldGravity = task.getGravity();
             task.setGravity(gravity);
+            taskDatabase.updateTask(task);
             LoggerRecordDto log = new LoggerRecordDto(userTask, task, "Task gravity updated from '" + oldGravity + "' to '" + gravity + "'.");
             setChanged();
             notifyObservers(log);
@@ -206,6 +217,7 @@ public class TaskController extends Observable {
         if (project.getUsers() != null && project.getUsers().contains(userTask)) {
             int oldUrgency = task.getUrgency();
             task.setUrgency(urgency);
+            taskDatabase.updateTask(task);
             LoggerRecordDto log = new LoggerRecordDto(userTask, task, "Task urgency updated from '" + oldUrgency + "' to '" + urgency + "'.");
             setChanged();
             notifyObservers(log);
@@ -233,6 +245,7 @@ public class TaskController extends Observable {
         if (project.getUsers() != null && project.getUsers().contains(userTask)) {
             int oldTrend = task.getTrend();
             task.setTrend(trend);
+            taskDatabase.updateTask(task);
             LoggerRecordDto log = new LoggerRecordDto(userTask, task, "Task trend updated from '" + oldTrend + "' to '" + trend + "'.");
             setChanged();
             notifyObservers(log);
@@ -260,6 +273,7 @@ public class TaskController extends Observable {
         if (project.getUsers() != null && project.getUsers().contains(userTask)) {
             Task.TaskStatus oldStatus = task.getStatus();
             task.setStatus(status);
+            taskDatabase.updateTask(task);
             LoggerRecordDto log = new LoggerRecordDto(userTask, task, "Task status updated from '" + oldStatus + "' to '" + status + "'.");
             setChanged();
             notifyObservers(log);

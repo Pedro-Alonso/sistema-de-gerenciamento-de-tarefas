@@ -6,14 +6,19 @@ import Classes.DTO.LoggerRecordDto;
 import Classes.Model.User;
 import Classes.Model.UserSession;
 import Classes.Model.UserTask;
+import Classes.Repository.UserDatabase;
 
 @SuppressWarnings("deprecation")
 public class UserController extends Observable {
+    private final UserDatabase userDatabase;
+
     /**
      * Constructor for the UserController class.
+     * Initializes the UserDatabase instance.
      */
     public UserController() {
         super();
+        this.userDatabase = UserDatabase.getInstance();
     }
 
     /**
@@ -34,6 +39,7 @@ public class UserController extends Observable {
      */
     public User createUser(String name, String email, String password) {
         UserTask user = new UserTask(name, email, password);
+        userDatabase.addUser(user);
         LoggerRecordDto log = new LoggerRecordDto(user, user, "User created.");
         setChanged();
         notifyObservers(log);
@@ -55,6 +61,7 @@ public class UserController extends Observable {
         }
         String oldName = user.getUsername();
         user.setUsername(name);
+        userDatabase.updateUser(user);
         LoggerRecordDto log = new LoggerRecordDto(user, user, "User name updated from '" + oldName + "' to '" + name + "'.");
         setChanged();
         notifyObservers(log);
@@ -75,6 +82,7 @@ public class UserController extends Observable {
         }
         String oldEmail = user.getUserEmail();
         user.setUserEmail(email);
+        userDatabase.updateUser(user);
         LoggerRecordDto log = new LoggerRecordDto(user, user, "User email updated from '" + oldEmail + "' to '" + email + "'.");
         setChanged();
         notifyObservers(log);
@@ -94,6 +102,7 @@ public class UserController extends Observable {
             throw new IllegalStateException("User session is invalid.");
         }
         user.setUserPassword(password);
+        userDatabase.updateUser(user);
         LoggerRecordDto log = new LoggerRecordDto(user, user, "User password updated.");
         setChanged();
         notifyObservers(log);
@@ -111,6 +120,7 @@ public class UserController extends Observable {
         if (user == null) {
             throw new IllegalStateException("User session is invalid.");
         }
+        userDatabase.removeUser(user.getId());
         LoggerRecordDto log = new LoggerRecordDto(user, user, "User removed.");
         setChanged();
         notifyObservers(log);

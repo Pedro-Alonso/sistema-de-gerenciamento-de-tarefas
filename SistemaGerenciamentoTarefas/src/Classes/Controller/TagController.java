@@ -1,19 +1,23 @@
 package Classes.Controller;
 
 import java.util.Observable;
-import java.util.UUID;
 
 import Classes.DTO.LoggerRecordDto;
 import Classes.Model.Tag;
 import Classes.Model.UserSession;
+import Classes.Repository.TagDatabase;
 
 @SuppressWarnings("deprecation")
 public class TagController extends Observable {
+    private final TagDatabase tagDatabase;
+
     /**
      * Constructor for the TagController class.
+     * Initializes the TagDatabase instance.
      */
     public TagController() {
         super();
+        this.tagDatabase = TagDatabase.getInstance();
     }
 
     /**
@@ -27,57 +31,46 @@ public class TagController extends Observable {
 
     /**
      * Method to create a tag.
-     * @param description The description of the tag -> {@link String}
-     * @param projectId The ID of the project associated with this tag -> {@link UUID}
-     * @param userSession The session of the user creating the tag -> {@link UserSession}
-     * @return The created tag -> {@link Tag}
+     * @param userSession The user session creating the tag -> {@link UserSession}
+     * @param tag The tag to be created -> {@link Tag}
      */
-    public Tag createTag(String description, UUID projectId, UserSession userSession) {
+    public void createTag(UserSession userSession, Tag tag) {
         if (!userSession.getStatus()) {
             throw new IllegalStateException("User session is not active.");
         }
-        if (userSession.getUser() == null) {
-            throw new IllegalStateException("User session is invalid.");
-        }
-        Tag tag = new Tag(description, projectId);
+        tagDatabase.addTag(tag);
         LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), tag, "Tag created.");
         setChanged();
         notifyObservers(log);
-        return tag;
     }
 
     /**
-     * Method to update the description of a tag.
+     * Method to update a tag description.
+     * @param userSession The user session updating the tag -> {@link UserSession}
      * @param tag The tag to be updated -> {@link Tag}
      * @param description The new description for the tag -> {@link String}
-     * @param userSession The session of the user updating the tag -> {@link UserSession}
      */
-    public void updateTagDescription(Tag tag, String description, UserSession userSession) {
+    public void updateTagDescription(UserSession userSession, Tag tag, String description) {
         if (!userSession.getStatus()) {
             throw new IllegalStateException("User session is not active.");
         }
-        if (userSession.getUser() == null) {
-            throw new IllegalStateException("User session is invalid.");
-        }
-        String oldDescription = tag.getDescription();
         tag.setDescription(description);
-        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), tag, "Tag description updated from '" + oldDescription + "' to '" + description + "'.");
+        tagDatabase.updateTag(tag);
+        LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), tag, "Tag description updated.");
         setChanged();
         notifyObservers(log);
     }
 
     /**
      * Method to remove a tag.
+     * @param userSession The user session removing the tag -> {@link UserSession}
      * @param tag The tag to be removed -> {@link Tag}
-     * @param userSession The session of the user removing the tag -> {@link UserSession}
      */
-    public void removeTag(Tag tag, UserSession userSession) {
+    public void removeTag(UserSession userSession, Tag tag) {
         if (!userSession.getStatus()) {
             throw new IllegalStateException("User session is not active.");
         }
-        if (userSession.getUser() == null) {
-            throw new IllegalStateException("User session is invalid.");
-        }
+        tagDatabase.removeTag(tag.getId());
         LoggerRecordDto log = new LoggerRecordDto(userSession.getUser(), tag, "Tag removed.");
         setChanged();
         notifyObservers(log);
